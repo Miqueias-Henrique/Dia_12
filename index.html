@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quer sair comigo? 💕</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #fff0f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 460px;
+    }
+
+    .screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      animation: fadeUp 0.4s ease;
+    }
+
+    .hidden { display: none !important; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0) translateY(var(--ty,0px)); }
+      20%     { transform: translateX(-8px) translateY(var(--ty,0px)); }
+      40%     { transform: translateX(8px) translateY(var(--ty,0px)); }
+      60%     { transform: translateX(-4px) translateY(var(--ty,0px)); }
+      80%     { transform: translateX(4px) translateY(var(--ty,0px)); }
+    }
+    @keyframes burst {
+      0%,100% { transform: scale(1); }
+      50%     { transform: scale(1.15); }
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .sprite-wrap {
+      width: 130px; height: 130px;
+      border-radius: 50%;
+      background: #FBEAF0;
+      border: 2.5px solid #F4C0D1;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.25rem;
+      animation: float 2.4s ease-in-out infinite;
+      overflow: hidden;
+    }
+
+    .sprite-wrap img {
+      width: 104px; height: 104px;
+      image-rendering: pixelated;
+      object-fit: contain;
+    }
+
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid #F4C0D1;
+      border-top-color: #D4537E;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #FBEAF0;
+      color: #72243E;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 20px;
+      border: 1px solid #F4C0D1;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #2c1a24;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: #7a5060;
+      margin-bottom: 1.75rem;
+      line-height: 1.7;
+    }
+
+    .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    .btn-yes {
+      padding: 12px 36px;
+      border-radius: 100px;
+      background: #D4537E;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.12s;
+      box-shadow: 0 4px 14px #D4537E44;
+    }
+    .btn-yes:hover { background: #b83d68; }
+    .btn-yes:active { transform: scale(0.96); }
+
+    .btn-no {
+      padding: 12px 36px;
+      border-radius: 100px;
+      background: #f5edf1;
+      border: 1px solid #e8cdd8;
+      color: #9a7080;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      position: relative;
+    }
+
+    .no-msg {
+      font-size: 13px;
+      color: #D4537E;
+      min-height: 20px;
+      margin-top: 0.75rem;
+      font-style: italic;
+    }
+
+    .progress-row { display: flex; gap: 7px; justify-content: center; margin-bottom: 1.5rem; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #e8cdd8; transition: background 0.35s; }
+    .dot.done { background: #D4537E; }
+
+    .card {
+      background: #fff;
+      border: 1px solid #f0dce6;
+      border-radius: 20px;
+      padding: 1.25rem;
+      width: 100%;
+      margin-top: 0.5rem;
+      box-shadow: 0 2px 16px #D4537E11;
+    }
+
+    .option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .opt {
+      padding: 14px 8px;
+      border-radius: 14px;
+      border: 1.5px solid #f0dce6;
+      background: #fff8fb;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: #2c1a24;
+      line-height: 1.4;
+      transition: all 0.18s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .opt:hover { border-color: #D4537E; background: #FBEAF0; color: #72243E; transform: translateY(-3px); box-shadow: 0 4px 12px #D4537E22; }
+    .opt:active { transform: scale(0.97); }
+
+    .opt img {
+      width: 60px; height: 60px;
+      image-rendering: pixelated;
+      object-fit: contain;
+    }
+
+    .opt-mini-spinner {
+      width: 22px; height: 22px;
+      border: 2px solid #F4C0D1;
+      border-top-color: #D4537E;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .summary-card {
+      background: #fff;
+      border: 1px solid #f0dce6;
+      border-radius: 20px;
+      padding: 1.25rem;
+      width: 100%;
+      margin: 1rem 0;
+      text-align: left;
+      box-shadow: 0 2px 16px #D4537E11;
+    }
+    .sum-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f5edf1;
+      font-size: 14px;
+    }
+    .sum-row:last-child { border-bottom: none; }
+    .sum-key { color: #9a7080; }
+    .sum-val { font-weight: 700; color: #2c1a24; }
+
+    .heart-row { font-size: 22px; margin: 0.5rem 0; letter-spacing: 8px; color: #D4537E; animation: burst 1.8s ease-in-out infinite; }
+    .final-note { font-size: 14px; color: #7a5060; line-height: 1.7; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="s0" class="screen">
+    <div class="sprite-wrap" id="sw0"><div class="spinner"></div></div>
+    <span class="badge">Mensagem do treinador</span>
+    <p class="title">Ei, você aí!</p>
+    <p class="subtitle">Pikachu usou <em>Cute Charm</em> em você.<br>Quer ser meu par nessa jornada?</p>
+    <div class="btn-row">
+      <button class="btn-yes" onclick="goTo('s1')">Sim, claro!</button>
+      <button class="btn-no" id="btnNo" onmouseover="runaway()" ontouchstart="runaway()">Não</button>
+    </div>
+    <p class="no-msg" id="noMsg"></p>
+  </div>
+
+  <div id="s1" class="screen hidden">
+    <div class="progress-row">
+      <div class="dot done"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+    <div class="sprite-wrap" style="background:#E1F5EE;border-color:#9FE1CB;" id="sw1">
+      <div class="spinner" style="border-color:#9FE1CB;border-top-color:#1D9E75;"></div>
+    </div>
+    <span class="badge" style="background:#E1F5EE;color:#085041;border-color:#9FE1CB;">Passo 1 de 3</span>
+    <p class="title">Qual região vamos explorar?</p>
+    <p class="subtitle">Escolhe o cenário do nosso encontro:</p>
+    <div class="card">
+      <div class="option-grid">
+        <button class="opt" onclick="pick('local','🌊 Cidade Cerúlea','s2')">
+          <div class="opt-mini-spinner" id="os-vaporeon"></div>
+          <span>Cidade Cerúlea</span>
+        </button>
+        <button class="opt" onclick="pick('local','🌺 Ilha Vermelha','s2')">
+          <div class="opt-mini-spinner" id="os-flareon"></div>
+          <span>Ilha Vermelha</span>
+        </button>
+        <button class="opt" onclick="pick('local','🏔️ Monte Prata','s2')">
+          <div class="opt-mini-spinner" id="os-jolteon"></div>
+          <span>Monte Prata</span>
+        </button>
+        <button class="opt" onclick="pick('local','🌳 Floresta Verde','s2')">
+          <div class="opt-mini-spinner" id="os-leafeon"></div>
+          <span>Floresta Verde</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="s2" class="screen hidden">
+    <div class="progress-row">
+      <div class="dot done"></div><div class="dot done"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+    <div class="sprite-wrap" style="background:#FAEEDA;border-color:#FAC775;" id="sw2">
+      <div class="spinner" style="border-color:#FAC775;border-top-color:#BA7517;"></div>
+    </div>
+    <span class="badge" style="background:#FAEEDA;color:#633806;border-color:#FAC775;">Passo 2 de 3</span>
+    <p class="title">O que vamos comer?</p>
+    <p class="subtitle">Escolhe o cardápio do nosso date:</p>
+    <div class="card">
+      <div class="option-grid">
+        <button class="opt" onclick="pick('comida','Sushi de Magikarp','s3')">
+          <div class="opt-mini-spinner" id="os-magikarp"></div>
+          <span>Sushi de Magikarp</span>
+        </button>
+        <button class="opt" onclick="pick('comida','Pizza de Slowpoke','s3')">
+          <div class="opt-mini-spinner" id="os-slowpoke"></div>
+          <span>Pizza de Slowpoke</span>
+        </button>
+        <button class="opt" onclick="pick('comida','Café da Jigglypuff','s3')">
+          <div class="opt-mini-spinner" id="os-jigglypuff"></div>
+          <span>Café da Jigglypuff</span>
+        </button>
+        <button class="opt" onclick="pick('comida','Sorvete Snover','s3')">
+          <div class="opt-mini-spinner" id="os-snover"></div>
+          <span>Sorvete Snover</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="s3" class="screen hidden">
+    <div class="progress-row">
+      <div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot"></div>
+    </div>
+    <div class="sprite-wrap" style="background:#E6F1FB;border-color:#B5D4F4;" id="sw3">
+      <div class="spinner" style="border-color:#B5D4F4;border-top-color:#185FA5;"></div>
+    </div>
+    <span class="badge" style="background:#E6F1FB;color:#0C447C;border-color:#B5D4F4;">Passo 3 de 3</span>
+    <p class="title">Quando a aventura começa?</p>
+    <p class="subtitle">Escolhe a data perfeita pra gente:</p>
+    <div class="card">
+      <div class="option-grid">
+        <button class="opt" onclick="pick('data','Hoje mesmo!','s4')">
+          <div class="opt-mini-spinner" id="os-raichu"></div>
+          <span>Hoje mesmo!</span>
+        </button>
+        <button class="opt" onclick="pick('data','Fim de semana','s4')">
+          <div class="opt-mini-spinner" id="os-eevee"></div>
+          <span>Fim de semana</span>
+        </button>
+        <button class="opt" onclick="pick('data','Semana que vem','s4')">
+          <div class="opt-mini-spinner" id="os-sylveon"></div>
+          <span>Semana que vem</span>
+        </button>
+        <button class="opt" onclick="pick('data','Quando Magikarp evoluir','s4')">
+          <div class="opt-mini-spinner" id="os-gyarados"></div>
+          <span>Quando Magikarp evoluir</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="s4" class="screen hidden">
+    <div class="sprite-wrap" style="background:#FBEAF0;border-color:#F4C0D1;animation:burst 1.8s ease-in-out infinite;" id="sw4">
+      <div class="spinner"></div>
+    </div>
+    <span class="badge">Date confirmado!</span>
+    <p class="title">Perfeito, treinador(a)!</p>
+    <div class="summary-card">
+      <div class="sum-row"><span class="sum-key">📍 Local</span><span class="sum-val" id="r-local"></span></div>
+      <div class="sum-row"><span class="sum-key">🍽️ Comida</span><span class="sum-val" id="r-comida"></span></div>
+      <div class="sum-row"><span class="sum-key">📅 Quando</span><span class="sum-val" id="r-data"></span></div>
+    </div>
+    <div class="heart-row">♥ ♥ ♥</div>
+    <p class="final-note">Você foi capturado(a) com uma Pokébola de Amor.<br>Não tem cura. Nível 100 confirmado.</p>
+  </div>
+
+</div>
+
+<script>
+  const BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
+  const POKES = {
+    pikachu: 25, clefairy: 35, vaporeon: 134, flareon: 136,
+    jolteon: 135, leafeon: 470, magikarp: 129, slowpoke: 79,
+    jigglypuff: 39, snover: 459, raichu: 26, eevee: 133,
+    sylveon: 700, gyarados: 130, togekiss: 468,
+  };
+
+  function spriteUrl(name) { return BASE + POKES[name] + '.png'; }
+
+  function loadSprite(wrapId, name) {
+    const wrap = document.getElementById(wrapId);
+    if (!wrap) return;
+    const img = new Image();
+    img.onload = () => {
+      wrap.innerHTML = '';
+      img.style.cssText = 'width:104px;height:104px;image-rendering:pixelated;object-fit:contain;';
+      wrap.appendChild(img);
+    };
+    img.src = spriteUrl(name);
+  }
+
+  function loadOptSprite(spinnerId, name) {
+    const el = document.getElementById(spinnerId);
+    if (!el) return;
+    const img = new Image();
+    img.onload = () => {
+      img.style.cssText = 'width:60px;height:60px;image-rendering:pixelated;object-fit:contain;';
+      el.replaceWith(img);
+    };
+    img.src = spriteUrl(name);
+  }
+
+  const choices = {};
+  let noCount = 0;
+  const msgs = [
+    'Esse botão tá com defeito... 🤔',
+    'Eita, escapou de novo!',
+    'Pikachu bloqueou o caminho!',
+    'Hm, que curioso...',
+    'Botão Não? Não existe nessa Pokédex.',
+    'É destino, aceita logo!',
+    'Ok, claramente não tem outra opção 😏'
+  ];
+
+  function runaway() {
+    const btn = document.getElementById('btnNo');
+    const msg = document.getElementById('noMsg');
+    noCount++;
+    msg.textContent = msgs[Math.min(noCount - 1, msgs.length - 1)];
+    btn.style.animation = 'none';
+    btn.offsetHeight;
+    const rx = (Math.random() > 0.5 ? 1 : -1) * (40 + Math.floor(Math.random() * 100));
+    const ry = (Math.random() > 0.5 ? 1 : -1) * Math.floor(Math.random() * 35);
+    btn.style.setProperty('--ty', ry + 'px');
+    btn.style.transform = `translate(${rx}px, ${ry}px)`;
+    btn.style.animation = 'shake 0.35s';
+    setTimeout(() => { btn.style.animation = ''; }, 400);
+    if (noCount >= 3) btn.style.opacity = String(Math.max(0.06, 1 - (noCount - 2) * 0.2));
+    if (noCount >= 7) { btn.style.opacity = '0'; btn.style.pointerEvents = 'none'; }
+  }
+
+  function goTo(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+  }
+
+  function pick(key, val, next) {
+    choices[key] = val;
+    if (next === 's4') {
+      document.getElementById('r-local').textContent = choices['local'] || '';
+      document.getElementById('r-comida').textContent = choices['comida'] || '';
+      document.getElementById('r-data').textContent = choices['data'] || '';
+    }
+    goTo(next);
+  }
+
+  window.addEventListener('load', () => {
+    loadSprite('sw0', 'pikachu');
+    loadSprite('sw1', 'clefairy');
+    loadSprite('sw2', 'jigglypuff');
+    loadSprite('sw3', 'eevee');
+    loadSprite('sw4', 'togekiss');
+    loadOptSprite('os-vaporeon',   'vaporeon');
+    loadOptSprite('os-flareon',    'flareon');
+    loadOptSprite('os-jolteon',    'jolteon');
+    loadOptSprite('os-leafeon',    'leafeon');
+    loadOptSprite('os-magikarp',   'magikarp');
+    loadOptSprite('os-slowpoke',   'slowpoke');
+    loadOptSprite('os-jigglypuff', 'jigglypuff');
+    loadOptSprite('os-snover',     'snover');
+    loadOptSprite('os-raichu',     'raichu');
+    loadOptSprite('os-eevee',      'eevee');
+    loadOptSprite('os-sylveon',    'sylveon');
+    loadOptSprite('os-gyarados',   'gyarados');
+  });
+</script>
+</body>
+</html>
