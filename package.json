@@ -1,7 +1,7 @@
 {
-  "name": "dia_12",
+  "name": "pokesage",
   "version": "2.0.0",
-  "description": "PokéDate — Convite interativo inspirado em Pokémon com Design Tokens (W3C DTCG), Tailwind CSS v4 e Dark Mode",
+  "description": "Pokesage — Convite interativo inspirado em Pokémon com Design Tokens (W3C DTCG), Tailwind CSS v4 e Dark Mode",
   "main": "index.html",
   "scripts": {
     "tokens:css": "node ~/.gemini/skills/design-tokens/scripts/generate-tokens.cjs -c tokens.json -o src/tokens.css -f css",
@@ -16,6 +16,7 @@
     "url": "git+https://github.com/Miqueias-Henrique/Dia_12.git"
   },
   "keywords": [
+    "pokesage",
     "pokemon",
     "date-invite",
     "design-tokens",

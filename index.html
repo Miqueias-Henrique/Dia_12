@@ -3,8 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Convite interativo inspirado em Pokémon para planejar nosso próximo encontro: escolha o lugar, o cardápio e o dia." />
-  <title>Quer sair comigo? — PokéDate</title>
+  <meta name="description" content="Pokesage — Convite interativo inspirado em Pokémon para planejar nosso próximo encontro: escolha o lugar, o cardápio e o dia." />
+  <meta property="og:title" content="Pokesage — Mensagem do treinador" />
+  <meta property="og:description" content="Pikachu usou Cute Charm em você. Abra sua Pokesage e monte nosso roteiro em 3 passos." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://miqueias-henrique.github.io/Dia_12/" />
+  <meta property="og:image" content="https://miqueias-henrique.github.io/Dia_12/assets/sprites/pikachu.png" />
+  <title>Pokesage — Quer sair comigo?</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%23ffffff' stroke='%2328151f' stroke-width='4'/%3E%3Cpath d='M4 32a28 28 0 0 1 56 0z' fill='%23d44070' stroke='%2328151f' stroke-width='4'/%3E%3Cline x1='4' y1='32' x2='60' y2='32' stroke='%2328151f' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='9' fill='%23ffffff' stroke='%2328151f' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='4' fill='%23d44070'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=JetBrains+Mono:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet" />
@@ -12,7 +18,7 @@
 </head>
 <body>
   <main class="wrap">
-    <section class="pokedex-shell" aria-label="Convite interativo PokéDate">
+    <section class="pokedex-shell" aria-label="Convite interativo Pokesage">
       <!-- Top Pokédex Bar -->
       <header class="pokedex-topbar">
         <div class="led-cluster" aria-hidden="true">
@@ -20,7 +26,7 @@
           <span class="led-dot rose"></span>
           <span class="led-dot amber"></span>
           <span class="led-dot mint"></span>
-          <span class="brand-tag">POKÉDATE #012</span>
+          <span class="brand-tag">POKESAGE #012</span>
         </div>
         <div class="toolbar-actions">
           <button type="button" class="icon-btn" id="btnSound" aria-pressed="true" aria-label="Ativar ou desativar efeitos sonoros 8-bit" title="Sons 8-bit">
@@ -593,7 +599,7 @@
 
     function buildSummaryText() {
       const lines = [
-        'Passaporte PokéDate Confirmado (Nv. 100)!',
+        'Passaporte Pokesage Confirmado (Nv. 100)!',
         `Local: ${choices.local}`,
         `Cardápio: ${choices.comida}`,
         `Quando: ${choices.data}`
@@ -630,11 +636,11 @@
       const ics = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
-        'PRODID:-//PokeDate//PT-BR',
+        'PRODID:-//Pokesage//PT-BR',
         'BEGIN:VEVENT',
         `DTSTART:${fmt(start)}`,
         `DTEND:${fmt(end)}`,
-        `SUMMARY:PokéDate: ${choices.local} (${choices.comida})`,
+        `SUMMARY:Pokesage: ${choices.local} (${choices.comida})`,
         `DESCRIPTION:${desc}`,
         `LOCATION:${choices.local}`,
         'END:VEVENT',
@@ -645,7 +651,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'pokedate-encontro.ics';
+      a.download = 'pokesage-encontro.ics';
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -675,7 +681,7 @@
       if (btn) btn.setAttribute('aria-pressed', String(isDark));
       if (moon) moon.classList.toggle('hidden', isDark);
       if (sun) sun.classList.toggle('hidden', !isDark);
-      try { localStorage.setItem('pokedate-theme', isDark ? 'dark' : 'light'); } catch (_) {}
+      try { localStorage.setItem('pokesage-theme', isDark ? 'dark' : 'light'); } catch (_) {}
     }
 
     /* Pokédex Modal */
@@ -714,7 +720,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       try {
-        const saved = localStorage.getItem('pokedate-theme');
+        const saved = localStorage.getItem('pokesage-theme');
         if (saved === 'dark') setDarkTheme(true);
       } catch (_) {}
 
