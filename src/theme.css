@@ -20,6 +20,10 @@
   --color-border: #e6ced9;
   --color-input: #e6ced9;
   --color-ring: #d44070;
+  --color-shiny-bg: #fefbe8;
+  --color-shiny-border: #facc15;
+  --color-shiny-fg: #713f12;
+  --color-shiny-accent: #ca8a04;
   --color-step-1-bg: #e6f8f2;
   --color-step-1-border: #99e3cb;
   --color-step-1-fg: #0a523b;
@@ -62,6 +66,10 @@
   --color-border: #3d2230;
   --color-input: #3d2230;
   --color-ring: #ec6b9b;
+  --color-shiny-bg: #2b2109;
+  --color-shiny-border: #facc15;
+  --color-shiny-fg: #fde68a;
+  --color-shiny-accent: #facc15;
   --color-step-1-bg: #0d2921;
   --color-step-1-border: #15966d;
   --color-step-1-fg: #99e3cb;

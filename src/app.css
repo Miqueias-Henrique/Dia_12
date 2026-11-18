@@ -36,9 +36,9 @@ body {
   font-family: var(--font-sans);
   background-color: var(--color-background);
   background-image:
-    radial-gradient(circle at 18% 14%, color-mix(in srgb, var(--color-primary) 12%, transparent) 0%, transparent 45%),
-    radial-gradient(circle at 82% 86%, color-mix(in srgb, var(--color-step-3-accent) 10%, transparent) 0%, transparent 45%),
-    radial-gradient(color-mix(in srgb, var(--color-primary) 11%, transparent) 1px, transparent 1px);
+    radial-gradient(circle at 16% 12%, color-mix(in srgb, var(--color-primary) 13%, transparent) 0%, transparent 48%),
+    radial-gradient(circle at 84% 88%, color-mix(in srgb, var(--color-step-3-accent) 11%, transparent) 0%, transparent 48%),
+    radial-gradient(color-mix(in srgb, var(--color-primary) 10%, transparent) 1px, transparent 1px);
   background-size: 100% 100%, 100% 100%, var(--primitive-spacing-6) var(--primitive-spacing-6);
   color: var(--color-foreground);
   min-height: 100vh;
@@ -49,16 +49,29 @@ body {
   justify-content: space-between;
   padding: var(--primitive-spacing-4);
   overflow-x: hidden;
+  position: relative;
   transition: background-color var(--primitive-duration-normal) ease, color var(--primitive-duration-normal) ease;
+}
+
+/* Ambient Particle & Confetti Canvas */
+.ambient-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .wrap {
   width: 100%;
   max-width: var(--primitive-size-wrap-max);
   margin: auto;
+  position: relative;
+  z-index: 1;
 }
 
-/* Pokédex Outer Shell */
+/* PokéNav / Pokédex Outer Hardware Shell */
 .pokedex-shell {
   background-color: var(--color-card);
   color: var(--color-card-foreground);
@@ -71,6 +84,22 @@ body {
   transition: background-color var(--primitive-duration-normal) ease, border-color var(--primitive-duration-normal) ease, box-shadow var(--primitive-duration-normal) ease;
 }
 
+.pokedex-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--color-primary),
+    var(--color-step-2-accent),
+    var(--color-step-1-accent),
+    var(--color-step-3-accent)
+  );
+  opacity: 0.85;
+  pointer-events: none;
+}
+
 .dark .pokedex-shell {
   box-shadow: var(--primitive-shadow-card-dark);
 }
@@ -80,6 +109,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--primitive-spacing-2);
   padding-bottom: var(--primitive-spacing-4);
   margin-bottom: var(--primitive-spacing-4);
   border-bottom: 1px solid var(--color-border);
@@ -88,21 +118,30 @@ body {
 .led-cluster {
   display: flex;
   align-items: center;
-  gap: var(--primitive-spacing-2);
+  gap: var(--primitive-spacing-15);
+  min-width: 0;
 }
 
 .led-lens {
   width: var(--primitive-spacing-5);
   height: var(--primitive-spacing-5);
+  flex-shrink: 0;
   border-radius: var(--primitive-radius-full);
   background: radial-gradient(circle at 32% 32%, var(--primitive-color-sky-200), var(--primitive-color-sky-500));
   border: 2px solid var(--color-border);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--primitive-color-sky-500) 45%, transparent);
+  box-shadow: 0 0 9px color-mix(in srgb, var(--primitive-color-sky-500) 45%, transparent);
+  transition: transform var(--primitive-duration-fast) ease, box-shadow var(--primitive-duration-fast) ease;
+}
+
+.led-lens.is-active {
+  transform: scale(1.1);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--color-primary) 75%, transparent);
 }
 
 .led-dot {
   width: var(--primitive-spacing-2);
   height: var(--primitive-spacing-2);
+  flex-shrink: 0;
   border-radius: var(--primitive-radius-full);
 }
 
@@ -117,12 +156,14 @@ body {
   color: var(--color-muted-foreground);
   letter-spacing: 0.04em;
   margin-left: var(--primitive-spacing-1);
+  white-space: nowrap;
 }
 
 .toolbar-actions {
   display: flex;
   align-items: center;
   gap: var(--primitive-spacing-15);
+  flex-shrink: 0;
 }
 
 .icon-btn {
@@ -136,7 +177,7 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform var(--primitive-duration-fast) ease, background-color var(--primitive-duration-fast) ease, border-color var(--primitive-duration-fast) ease;
+  transition: transform var(--primitive-duration-fast) ease, background-color var(--primitive-duration-fast) ease, border-color var(--primitive-duration-fast) ease, color var(--primitive-duration-fast) ease;
 }
 
 .icon-btn:hover {
@@ -156,11 +197,39 @@ body {
   color: var(--color-primary);
 }
 
+.icon-btn.shiny-btn[aria-pressed="true"] {
+  background-color: var(--color-shiny-bg);
+  border-color: var(--color-shiny-border);
+  color: var(--color-shiny-fg);
+  box-shadow: var(--primitive-shadow-shiny);
+}
+
 button:focus-visible,
 input:focus-visible,
-a:focus-visible {
+textarea:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
   outline: 2px solid var(--color-ring);
   outline-offset: 2px;
+}
+
+/* Custom Recipient Ribbon */
+.custom-ribbon {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--primitive-spacing-15);
+  background-color: var(--color-muted);
+  color: var(--color-muted-foreground);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--primitive-radius-full);
+  padding: var(--primitive-spacing-1) var(--primitive-spacing-3);
+  font-size: var(--primitive-fontSize-2xs);
+  font-weight: 600;
+  margin-bottom: var(--primitive-spacing-3);
+}
+
+.custom-ribbon strong {
+  color: var(--color-foreground);
 }
 
 /* Step Navigation & Progress */
@@ -256,12 +325,25 @@ a:focus-visible {
 
 @keyframes pulseSoft {
   0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.05); }
+  50%      { transform: scale(1.06); }
 }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+@keyframes caretBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes ballWobble {
+  0%, 100% { transform: rotate(0deg) translateX(0); }
+  20%      { transform: rotate(-18deg) translateX(-6px); }
+  45%      { transform: rotate(16deg) translateX(6px); }
+  70%      { transform: rotate(-10deg) translateX(-3px); }
+}
+
+@keyframes ballPop {
+  0%   { transform: scale(0.88); }
+  50%  { transform: scale(1.12); }
+  100% { transform: scale(1); }
 }
 
 /* Sprite Stage */
@@ -286,8 +368,13 @@ a:focus-visible {
   overflow: hidden;
   cursor: pointer;
   position: relative;
-  box-shadow: inset 0 -6px 14px color-mix(in srgb, var(--stage-border, var(--color-primary)) 22%, transparent);
-  transition: transform var(--primitive-duration-fast) ease, border-color var(--primitive-duration-normal) ease, background-color var(--primitive-duration-normal) ease;
+  box-shadow: inset 0 -6px 14px color-mix(in srgb, var(--stage-border, var(--color-primary)) 24%, transparent);
+  transition: transform var(--primitive-duration-fast) ease, border-color var(--primitive-duration-normal) ease, background-color var(--primitive-duration-normal) ease, box-shadow var(--primitive-duration-normal) ease;
+}
+
+.is-shiny .sprite-wrap {
+  border-color: var(--color-shiny-border);
+  box-shadow: var(--primitive-shadow-shiny), inset 0 -6px 14px color-mix(in srgb, var(--color-shiny-border) 28%, transparent);
 }
 
 .sprite-wrap:hover {
@@ -318,7 +405,15 @@ a:focus-visible {
   font-size: var(--primitive-fontSize-2xs);
   font-weight: 700;
   letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--primitive-spacing-1);
   box-shadow: 0 2px 6px color-mix(in srgb, var(--color-foreground) 8%, transparent);
+}
+
+.shiny-star-tag {
+  color: var(--color-shiny-accent);
+  font-weight: 700;
 }
 
 /* Step Theme Variants */
@@ -341,15 +436,6 @@ a:focus-visible {
   --stage-border: var(--color-step-3-border);
   --stage-fg: var(--color-step-3-fg);
   --stage-accent: var(--color-step-3-accent);
-}
-
-.spinner {
-  width: var(--primitive-size-spinner-lg);
-  height: var(--primitive-size-spinner-lg);
-  border: 3px solid var(--stage-border, var(--color-border));
-  border-top-color: var(--stage-accent, var(--color-primary));
-  border-radius: var(--primitive-radius-full);
-  animation: spin 0.8s linear infinite;
 }
 
 .badge {
@@ -383,7 +469,7 @@ a:focus-visible {
   color: var(--color-muted-foreground);
   margin-bottom: var(--primitive-spacing-5);
   line-height: 1.6;
-  max-width: 92%;
+  max-width: 94%;
 }
 
 /* RPG Dialogue Box on Hero */
@@ -402,7 +488,7 @@ a:focus-visible {
   font-family: var(--font-pixel);
   font-size: var(--primitive-fontSize-2xs);
   color: var(--color-primary);
-  margin-bottom: var(--primitive-spacing-15);
+  margin-bottom: var(--primitive-spacing-2);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -411,7 +497,18 @@ a:focus-visible {
 .dialogue-text {
   font-size: var(--primitive-fontSize-sm);
   color: var(--color-foreground);
-  line-height: 1.55;
+  line-height: 1.6;
+  min-height: var(--primitive-spacing-10);
+}
+
+.dialogue-caret {
+  display: inline-block;
+  width: var(--primitive-spacing-2);
+  height: var(--primitive-spacing-3);
+  margin-left: var(--primitive-spacing-1);
+  background-color: var(--color-primary);
+  vertical-align: middle;
+  animation: caretBlink 0.9s steps(2, start) infinite;
 }
 
 /* Buttons & Evasive Arena */
@@ -482,6 +579,23 @@ a:focus-visible {
   margin-top: var(--primitive-spacing-3);
 }
 
+.hero-hint {
+  margin-top: var(--primitive-spacing-2);
+  font-size: var(--primitive-fontSize-2xs);
+  color: var(--color-muted-foreground);
+}
+
+.hero-hint-btn {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-size: inherit;
+}
+
 /* Option Cards */
 .card {
   background-color: var(--color-card);
@@ -530,9 +644,9 @@ a:focus-visible {
 }
 
 .opt[aria-pressed="true"] {
-  border-color: var(--color-primary);
-  background-color: var(--color-accent);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 25%, transparent);
+  border-color: var(--stage-accent, var(--color-primary));
+  background-color: var(--stage-bg, var(--color-accent));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--stage-accent, var(--color-primary)) 28%, transparent);
 }
 
 .opt-dex {
@@ -556,17 +670,64 @@ a:focus-visible {
   object-fit: contain;
 }
 
-.opt-mini-spinner {
-  width: var(--primitive-size-spinner-sm);
-  height: var(--primitive-size-spinner-sm);
-  border: 2px solid var(--color-border);
-  border-top-color: var(--color-primary);
-  border-radius: var(--primitive-radius-full);
-  animation: spin 0.8s linear infinite;
-  margin: var(--primitive-spacing-2) 0;
+/* Capture Sequence Screen */
+.capture-stage {
+  padding: var(--primitive-spacing-8) var(--primitive-spacing-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--primitive-spacing-4);
+  width: 100%;
 }
 
-/* Step 4: Trainer Pass Summary Card */
+.pokeball-wrap {
+  width: var(--primitive-size-pokeball);
+  height: var(--primitive-size-pokeball);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.pokeball-svg {
+  width: 100%;
+  height: 100%;
+  transform-origin: center 75%;
+}
+
+.pokeball-svg.is-wobbling {
+  animation: ballWobble 0.55s ease-in-out infinite;
+}
+
+.pokeball-svg.is-caught {
+  animation: ballPop 0.4s ease-out forwards;
+  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--color-shiny-accent) 70%, transparent));
+}
+
+.capture-stars {
+  display: flex;
+  gap: var(--primitive-spacing-2);
+  color: var(--color-shiny-accent);
+  min-height: var(--primitive-spacing-5);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity var(--primitive-duration-normal) ease, transform var(--primitive-duration-normal) ease;
+}
+
+.capture-stars.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.capture-status {
+  font-family: var(--font-pixel);
+  font-size: var(--primitive-fontSize-xs);
+  color: var(--color-primary);
+  line-height: 1.6;
+}
+
+/* Step 4: Holofoil Trainer Pass Card */
 .trainer-pass {
   background-color: var(--color-muted);
   border: 1.5px solid var(--color-border);
@@ -577,6 +738,27 @@ a:focus-visible {
   text-align: left;
   position: relative;
   overflow: hidden;
+  --foil-x: 50%;
+  --foil-y: 50%;
+}
+
+.trainer-pass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--foil-x) var(--foil-y),
+    color-mix(in srgb, var(--color-primary) 14%, transparent) 0%,
+    color-mix(in srgb, var(--color-shiny-accent) 8%, transparent) 24%,
+    transparent 58%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--primitive-duration-normal) ease;
+}
+
+.trainer-pass:hover::after {
+  opacity: 1;
 }
 
 .pass-header {
@@ -605,6 +787,46 @@ a:focus-visible {
   border-radius: var(--primitive-radius-sm);
 }
 
+/* Chosen Team Strip inside Pass */
+.team-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--primitive-spacing-2);
+  margin-bottom: var(--primitive-spacing-3);
+  padding: var(--primitive-spacing-25);
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-md);
+}
+
+.team-member {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--primitive-spacing-05);
+}
+
+.team-member img {
+  width: var(--primitive-size-team-sprite);
+  height: var(--primitive-size-team-sprite);
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+
+.team-role {
+  font-family: var(--font-mono);
+  font-size: var(--primitive-fontSize-2xs);
+  color: var(--color-muted-foreground);
+  text-transform: uppercase;
+}
+
+.team-poke {
+  font-size: var(--primitive-fontSize-2xs);
+  font-weight: 700;
+  color: var(--color-foreground);
+}
+
 .sum-row {
   display: flex;
   justify-content: space-between;
@@ -625,6 +847,7 @@ a:focus-visible {
   align-items: center;
   gap: var(--primitive-spacing-2);
   font-weight: 500;
+  flex-shrink: 0;
 }
 
 .sum-val-wrap {
@@ -632,11 +855,13 @@ a:focus-visible {
   align-items: center;
   gap: var(--primitive-spacing-2);
   text-align: right;
+  min-width: 0;
 }
 
 .sum-val {
   font-weight: 700;
   color: var(--color-foreground);
+  word-break: break-word;
 }
 
 .sum-change-btn {
@@ -648,6 +873,7 @@ a:focus-visible {
   padding: var(--primitive-spacing-05) var(--primitive-spacing-15);
   cursor: pointer;
   font-weight: 600;
+  flex-shrink: 0;
 }
 
 .sum-change-btn:hover {
@@ -655,7 +881,7 @@ a:focus-visible {
   border-color: var(--color-primary);
 }
 
-/* Custom Note Input Group (shadcn Form pattern) */
+/* Custom Note Input Group */
 .note-box {
   width: 100%;
   text-align: left;
@@ -684,7 +910,7 @@ a:focus-visible {
 
 .note-input::placeholder {
   color: var(--color-muted-foreground);
-  opacity: 0.7;
+  opacity: 0.75;
 }
 
 .note-input:focus {
@@ -739,6 +965,10 @@ a:focus-visible {
   color: var(--button-fg);
 }
 
+.btn-action.full-span {
+  grid-column: span 2;
+}
+
 .heart-row {
   display: inline-flex;
   align-items: center;
@@ -755,12 +985,12 @@ a:focus-visible {
   margin-bottom: var(--primitive-spacing-3);
 }
 
-/* Accessible Dialog (Pokédex Guide) */
+/* Accessible Dialog (Pokédex & Studio) */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background-color: color-mix(in srgb, var(--primitive-color-plum-950) 65%, transparent);
-  backdrop-filter: blur(4px);
+  background-color: color-mix(in srgb, var(--primitive-color-plum-950) 70%, transparent);
+  backdrop-filter: blur(5px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -772,6 +1002,8 @@ a:focus-visible {
 .modal-card {
   width: 100%;
   max-width: var(--primitive-size-dialog-max);
+  max-height: 88vh;
+  overflow-y: auto;
   background-color: var(--color-popover);
   color: var(--color-popover-foreground);
   border: 1.5px solid var(--color-border);
@@ -785,6 +1017,7 @@ a:focus-visible {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--primitive-spacing-2);
   margin-bottom: var(--primitive-spacing-3);
 }
 
@@ -794,18 +1027,148 @@ a:focus-visible {
   font-weight: 700;
 }
 
+/* Segmented Tabs inside Pokédex */
+.segmented-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--primitive-spacing-2);
+  margin-bottom: var(--primitive-spacing-3);
+}
+
+.segmented-tabs {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: var(--primitive-spacing-1);
+  background-color: var(--color-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-md);
+  gap: var(--primitive-spacing-1);
+}
+
+.seg-btn {
+  border: none;
+  background: transparent;
+  color: var(--color-muted-foreground);
+  font-size: var(--primitive-fontSize-xs);
+  font-weight: 700;
+  white-space: nowrap;
+  padding: var(--primitive-spacing-1) var(--primitive-spacing-3);
+  border-radius: var(--primitive-radius-sm);
+  cursor: pointer;
+  transition: all var(--primitive-duration-fast) ease;
+}
+
+.seg-btn[aria-selected="true"] {
+  background-color: var(--color-card);
+  color: var(--color-foreground);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--color-foreground) 10%, transparent);
+}
+
+/* Pokédex Inspector Detail Card */
+.dex-inspector {
+  background-color: var(--color-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-lg);
+  padding: var(--primitive-spacing-35);
+  margin-bottom: var(--primitive-spacing-3);
+  display: flex;
+  gap: var(--primitive-spacing-3);
+  align-items: center;
+}
+
+.dex-inspector-sprite {
+  width: var(--primitive-size-opt-sprite);
+  height: var(--primitive-size-opt-sprite);
+  flex-shrink: 0;
+  border-radius: var(--primitive-radius-md);
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.dex-inspector-sprite img {
+  width: var(--primitive-size-team-sprite);
+  height: var(--primitive-size-team-sprite);
+  image-rendering: pixelated;
+}
+
+.dex-inspector-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.dex-inspector-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--primitive-spacing-2);
+  margin-bottom: var(--primitive-spacing-1);
+}
+
+.dex-inspector-name {
+  font-family: var(--font-display);
+  font-size: var(--primitive-fontSize-base);
+  font-weight: 700;
+}
+
+.dex-type-pill {
+  font-family: var(--font-mono);
+  font-size: var(--primitive-fontSize-2xs);
+  font-weight: 700;
+  padding: var(--primitive-spacing-05) var(--primitive-spacing-2);
+  border-radius: var(--primitive-radius-full);
+  background-color: var(--color-accent);
+  color: var(--color-accent-foreground);
+}
+
+.dex-inspector-desc {
+  font-size: var(--primitive-fontSize-xs);
+  color: var(--color-muted-foreground);
+  line-height: 1.45;
+  margin-bottom: var(--primitive-spacing-2);
+}
+
+.dex-stat-row {
+  display: flex;
+  align-items: center;
+  gap: var(--primitive-spacing-2);
+  font-family: var(--font-mono);
+  font-size: var(--primitive-fontSize-2xs);
+  color: var(--color-muted-foreground);
+}
+
+.dex-stat-track {
+  flex: 1;
+  height: var(--primitive-size-stat-bar);
+  background-color: var(--color-card);
+  border-radius: var(--primitive-radius-full);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.dex-stat-fill {
+  height: 100%;
+  background-color: var(--color-primary);
+  border-radius: var(--primitive-radius-full);
+  transition: width var(--primitive-duration-normal) ease;
+}
+
 .dex-list {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--primitive-spacing-2);
-  max-height: 48vh;
+  max-height: 36vh;
   overflow-y: auto;
   padding-right: var(--primitive-spacing-1);
 }
 
 .dex-item {
   background-color: var(--color-muted);
-  border: 1px solid var(--color-border);
+  border: 1.5px solid var(--color-border);
   border-radius: var(--primitive-radius-md);
   padding: var(--primitive-spacing-2);
   display: flex;
@@ -813,6 +1176,15 @@ a:focus-visible {
   align-items: center;
   text-align: center;
   gap: var(--primitive-spacing-1);
+  cursor: pointer;
+  color: var(--color-foreground);
+  transition: all var(--primitive-duration-fast) ease;
+}
+
+.dex-item:hover,
+.dex-item[aria-selected="true"] {
+  border-color: var(--color-primary);
+  background-color: var(--color-accent);
 }
 
 .dex-item img {
@@ -832,6 +1204,115 @@ a:focus-visible {
   color: var(--color-muted-foreground);
 }
 
+/* Studio Creator Modal Form */
+.studio-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--primitive-spacing-25);
+}
+
+.studio-row-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--primitive-spacing-25);
+}
+
+.studio-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--primitive-spacing-1);
+}
+
+.studio-textarea {
+  resize: vertical;
+  min-height: var(--primitive-spacing-10);
+}
+
+.messenger-picker {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--primitive-spacing-15);
+}
+
+.messenger-opt {
+  background-color: var(--color-muted);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--primitive-radius-md);
+  padding: var(--primitive-spacing-1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--primitive-duration-fast) ease;
+}
+
+.messenger-opt:hover,
+.messenger-opt[aria-pressed="true"] {
+  border-color: var(--color-primary);
+  background-color: var(--color-accent);
+}
+
+.messenger-opt img {
+  width: var(--primitive-size-spinner-lg);
+  height: var(--primitive-size-spinner-lg);
+  image-rendering: pixelated;
+}
+
+.studio-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--primitive-spacing-25) var(--primitive-spacing-3);
+  background-color: var(--color-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-md);
+  font-size: var(--primitive-fontSize-xs);
+  font-weight: 600;
+}
+
+.studio-switch {
+  width: var(--primitive-size-touch-min);
+  height: var(--primitive-spacing-6);
+  border-radius: var(--primitive-radius-full);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-secondary);
+  position: relative;
+  cursor: pointer;
+  transition: background-color var(--primitive-duration-fast) ease;
+}
+
+.studio-switch[aria-checked="true"] {
+  background-color: var(--color-shiny-accent);
+  border-color: var(--color-shiny-border);
+}
+
+.studio-switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: var(--primitive-spacing-4);
+  height: var(--primitive-spacing-4);
+  border-radius: var(--primitive-radius-full);
+  background-color: var(--color-card);
+  transition: transform var(--primitive-duration-fast) ease;
+}
+
+.studio-switch[aria-checked="true"] .studio-switch-thumb {
+  transform: translateX(var(--primitive-spacing-5));
+}
+
+.studio-link-box {
+  background-color: var(--color-muted);
+  border: 1px dashed var(--color-primary);
+  border-radius: var(--primitive-radius-md);
+  padding: var(--primitive-spacing-25);
+  font-family: var(--font-mono);
+  font-size: var(--primitive-fontSize-2xs);
+  color: var(--color-foreground);
+  word-break: break-all;
+  line-height: 1.45;
+}
+
 /* Toast Notification */
 .toast {
   position: fixed;
@@ -849,6 +1330,7 @@ a:focus-visible {
   gap: var(--primitive-spacing-2);
   box-shadow: var(--card-shadow);
   z-index: 60;
+  max-width: 92vw;
   transition: opacity var(--primitive-duration-fast) ease, transform var(--primitive-duration-fast) ease;
 }
 
@@ -858,9 +1340,24 @@ a:focus-visible {
   text-align: center;
   font-size: var(--primitive-fontSize-2xs);
   color: var(--color-muted-foreground);
+  display: flex;
+  flex-direction: column;
+  gap: var(--primitive-spacing-1);
 }
 
-/* Reduced Motion Compliance (design-uiux & taste-skill) */
+.footer-link {
+  color: var(--color-foreground);
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--color-border);
+}
+
+.footer-link:hover {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+/* Reduced Motion Compliance */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -872,11 +1369,20 @@ a:focus-visible {
   }
 }
 
-@media (width <= 24em) {
+@media (width <= 26em) {
   .pokedex-shell {
     padding: var(--primitive-spacing-4);
   }
   .option-grid {
     gap: var(--primitive-spacing-2);
+  }
+  .brand-tag {
+    display: none;
+  }
+  .messenger-picker {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .studio-row-2 {
+    grid-template-columns: 1fr;
   }
 }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Pokesage — Convite interativo inspirado em Pokémon para planejar nosso próximo encontro: escolha o lugar, o cardápio e o dia." />
+  <meta name="description" content="Pokesage — Estação interativa de convites Pokémon: escolha o roteiro em 3 passos, desbloqueie o modo Shiny, baixe seu bilhete colecionável em PNG ou crie seu próprio link personalizado." />
   <meta property="og:title" content="Pokesage — Mensagem do treinador" />
   <meta property="og:description" content="Pikachu usou Cute Charm em você. Abra sua Pokesage e monte nosso roteiro em 3 passos." />
   <meta property="og:type" content="website" />
@@ -17,32 +17,45 @@
   <link rel="stylesheet" href="./dist/styles.css" />
 </head>
 <body>
+  <canvas id="ambientCanvas" class="ambient-canvas" aria-hidden="true"></canvas>
+
   <main class="wrap">
-    <section class="pokedex-shell" aria-label="Convite interativo Pokesage">
-      <!-- Top Pokédex Bar -->
+    <section class="pokedex-shell" aria-label="Estação interativa Pokesage">
+      <!-- Hardware Topbar -->
       <header class="pokedex-topbar">
         <div class="led-cluster" aria-hidden="true">
-          <span class="led-lens"></span>
+          <span class="led-lens" id="ledLens"></span>
           <span class="led-dot rose"></span>
           <span class="led-dot amber"></span>
           <span class="led-dot mint"></span>
           <span class="brand-tag">POKESAGE #012</span>
         </div>
         <div class="toolbar-actions">
+          <button type="button" class="icon-btn" id="btnStudio" aria-haspopup="dialog" aria-expanded="false" aria-controls="studioModal" aria-label="Criar minha Pokesage personalizada" title="Criar minha Pokesage">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+          </button>
+          <button type="button" class="icon-btn shiny-btn" id="btnShiny" aria-pressed="false" aria-label="Alternar modo Shiny dos Pokémon" title="Modo ★ Shiny">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </button>
           <button type="button" class="icon-btn" id="btnSound" aria-pressed="true" aria-label="Ativar ou desativar efeitos sonoros 8-bit" title="Sons 8-bit">
-            <svg id="iconSoundOn" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg id="iconSoundOn" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
               <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
               <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
             </svg>
-            <svg id="iconSoundOff" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg id="iconSoundOff" class="hidden" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
               <line x1="23" y1="9" x2="17" y2="15"></line>
               <line x1="17" y1="9" x2="23" y2="15"></line>
             </svg>
           </button>
-          <button type="button" class="icon-btn" id="btnDex" aria-haspopup="dialog" aria-expanded="false" aria-controls="dexModal" aria-label="Abrir guia Pokédex do encontro" title="Pokédex do Encontro">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <button type="button" class="icon-btn" id="btnDex" aria-haspopup="dialog" aria-expanded="false" aria-controls="dexModal" aria-label="Abrir Pokédex interativa do encontro" title="Pokédex (15)">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="12" cy="12" r="10"></circle>
               <circle cx="12" cy="12" r="3"></circle>
               <line x1="2" y1="12" x2="9" y2="12"></line>
@@ -50,10 +63,10 @@
             </svg>
           </button>
           <button type="button" class="icon-btn" id="btnTheme" aria-pressed="false" aria-label="Alternar entre tema claro e escuro" title="Alternar tema">
-            <svg id="iconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg id="iconMoon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
             </svg>
-            <svg id="iconSun" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg id="iconSun" class="hidden" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="12" cy="12" r="5"></circle>
               <line x1="12" y1="1" x2="12" y2="3"></line>
               <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -70,11 +83,16 @@
 
       <!-- SCREEN 0: HERO INVITATION -->
       <div id="s0" class="screen">
+        <div id="customRibbon" class="custom-ribbon hidden"></div>
+
         <div class="sprite-stage-outer">
-          <div class="sprite-wrap" id="sw0" role="button" tabindex="0" aria-label="Pikachu — clique para interagir" onclick="pokeCry('pikachu')">
-            <img src="./assets/sprites/pikachu.png" alt="Pikachu" width="96" height="96" />
+          <div class="sprite-wrap" id="sw0" role="button" tabindex="0" aria-label="Pikachu — clique para interagir" onclick="Pokesage.pokeCry('hero')">
+            <img id="heroSpriteImg" data-poke="pikachu" src="./assets/sprites/pikachu.png" alt="Pikachu" width="100" height="100" />
           </div>
-          <span class="dex-pill" id="pill0">#025 PIKACHU</span>
+          <span class="dex-pill" id="pill0">
+            <span class="shiny-star-tag hidden" aria-hidden="true">★</span>
+            <span id="pill0Text">#025 PIKACHU</span>
+          </span>
         </div>
 
         <span class="badge">
@@ -84,35 +102,39 @@
           Mensagem do treinador
         </span>
 
-        <h1 class="title">Ei, você aí!</h1>
-        <p class="subtitle">Um convite especial apareceu no seu caminho. Vamos montar nosso roteiro em 3 passos?</p>
+        <h1 class="title" id="heroTitle">Ei, você aí!</h1>
+        <p class="subtitle">Uma Pokesage especial chegou até você. Vamos montar nosso roteiro em 3 passos?</p>
 
         <div class="dialogue-box" role="region" aria-label="Diálogo do convite">
           <div class="dialogue-speaker">
-            <span>PIKACHU PARCEIRO</span>
+            <span id="dialogueSpeaker">PIKACHU PARCEIRO</span>
             <span aria-hidden="true">▸</span>
           </div>
-          <p class="dialogue-text">Pikachu usou <strong>Cute Charm</strong> em você. Quer ser meu par nessa jornada?</p>
+          <p class="dialogue-text" id="dialogueText">Pikachu usou Cute Charm em você. Quer ser meu par nessa jornada?</p>
         </div>
 
         <div class="evade-arena" id="evadeArena">
           <div class="btn-row">
-            <button type="button" class="btn-yes" onclick="goTo('s1')">
+            <button type="button" class="btn-yes" onclick="Pokesage.goTo('s1')">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
               </svg>
               Sim, claro!
             </button>
-            <button type="button" class="btn-no" id="btnNo" onmouseover="runaway()" ontouchstart="runaway()" onclick="runaway()">Não</button>
+            <button type="button" class="btn-no" id="btnNo" onmouseover="Pokesage.runaway()" ontouchstart="Pokesage.runaway()" onclick="Pokesage.runaway()">Não</button>
           </div>
         </div>
         <p class="no-msg" id="noMsg" aria-live="polite"></p>
+        <p class="hero-hint">
+          Quer mandar um convite com o seu nome?
+          <button type="button" class="hero-hint-btn" onclick="Pokesage.toggleStudioModal(true)">Criar minha Pokesage</button>
+        </p>
       </div>
 
       <!-- SCREEN 1: STEP 1 (LOCATION) -->
       <div id="s1" class="screen theme-step-1 hidden">
         <div class="step-header">
-          <button type="button" class="back-btn" onclick="goTo('s0')">
+          <button type="button" class="back-btn" onclick="Pokesage.goTo('s0')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
@@ -128,10 +150,10 @@
         </div>
 
         <div class="sprite-stage-outer">
-          <div class="sprite-wrap" id="sw1" role="button" tabindex="0" aria-label="Clefairy — clique para interagir" onclick="pokeCry('clefairy')">
-            <img src="./assets/sprites/clefairy.png" alt="Clefairy" width="96" height="96" />
+          <div class="sprite-wrap" id="sw1" role="button" tabindex="0" aria-label="Clefairy — clique para interagir" onclick="Pokesage.pokeCry('clefairy')">
+            <img data-poke="clefairy" src="./assets/sprites/clefairy.png" alt="Clefairy" width="100" height="100" />
           </div>
-          <span class="dex-pill">#035 CLEFAIRY</span>
+          <span class="dex-pill"><span class="shiny-star-tag hidden" aria-hidden="true">★</span> #035 CLEFAIRY</span>
         </div>
 
         <span class="badge">Passo 1 de 3 • Região</span>
@@ -140,27 +162,27 @@
 
         <div class="card">
           <div class="option-grid" role="group" aria-label="Opções de local">
-            <button type="button" class="opt" data-group="local" onclick="pick('local','Cidade Cerúlea','s2', this)">
+            <button type="button" class="opt" onclick="Pokesage.pick('local','Cidade Cerúlea','vaporeon','s2', this)">
               <span class="opt-dex">#134 VAPOREON</span>
-              <img id="os-vaporeon" src="./assets/sprites/vaporeon.png" alt="Vaporeon" width="60" height="60" />
+              <img data-poke="vaporeon" src="./assets/sprites/vaporeon.png" alt="Vaporeon" width="60" height="60" />
               <span>Cidade Cerúlea</span>
               <span class="opt-sub">Beira-mar e brisa fresca</span>
             </button>
-            <button type="button" class="opt" data-group="local" onclick="pick('local','Ilha Vermelha','s2', this)">
+            <button type="button" class="opt" onclick="Pokesage.pick('local','Ilha Vermelha','flareon','s2', this)">
               <span class="opt-dex">#136 FLAREON</span>
-              <img id="os-flareon" src="./assets/sprites/flareon.png" alt="Flareon" width="60" height="60" />
+              <img data-poke="flareon" src="./assets/sprites/flareon.png" alt="Flareon" width="60" height="60" />
               <span>Ilha Vermelha</span>
               <span class="opt-sub">Pôr do sol e clima quente</span>
             </button>
-            <button type="button" class="opt" data-group="local" onclick="pick('local','Monte Prata','s2', this)">
+            <button type="button" class="opt" onclick="Pokesage.pick('local','Monte Prata','jolteon','s2', this)">
               <span class="opt-dex">#135 JOLTEON</span>
-              <img id="os-jolteon" src="./assets/sprites/jolteon.png" alt="Jolteon" width="60" height="60" />
+              <img data-poke="jolteon" src="./assets/sprites/jolteon.png" alt="Jolteon" width="60" height="60" />
               <span>Monte Prata</span>
               <span class="opt-sub">Mirante alto e estrelas</span>
             </button>
-            <button type="button" class="opt" data-group="local" onclick="pick('local','Floresta Verde','s2', this)">
+            <button type="button" class="opt" onclick="Pokesage.pick('local','Floresta Verde','leafeon','s2', this)">
               <span class="opt-dex">#470 LEAFEON</span>
-              <img id="os-leafeon" src="./assets/sprites/leafeon.png" alt="Leafeon" width="60" height="60" />
+              <img data-poke="leafeon" src="./assets/sprites/leafeon.png" alt="Leafeon" width="60" height="60" />
               <span>Floresta Verde</span>
               <span class="opt-sub">Ar livre e caminhada</span>
             </button>
@@ -171,7 +193,7 @@
       <!-- SCREEN 2: STEP 2 (FOOD) -->
       <div id="s2" class="screen theme-step-2 hidden">
         <div class="step-header">
-          <button type="button" class="back-btn" onclick="goTo('s1')">
+          <button type="button" class="back-btn" onclick="Pokesage.goTo('s1')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
@@ -187,10 +209,10 @@
         </div>
 
         <div class="sprite-stage-outer">
-          <div class="sprite-wrap" id="sw2" role="button" tabindex="0" aria-label="Jigglypuff — clique para interagir" onclick="pokeCry('jigglypuff')">
-            <img src="./assets/sprites/jigglypuff.png" alt="Jigglypuff" width="96" height="96" />
+          <div class="sprite-wrap" id="sw2" role="button" tabindex="0" aria-label="Jigglypuff — clique para interagir" onclick="Pokesage.pokeCry('jigglypuff')">
+            <img data-poke="jigglypuff" src="./assets/sprites/jigglypuff.png" alt="Jigglypuff" width="100" height="100" />
           </div>
-          <span class="dex-pill">#039 JIGGLYPUFF</span>
+          <span class="dex-pill"><span class="shiny-star-tag hidden" aria-hidden="true">★</span> #039 JIGGLYPUFF</span>
         </div>
 
         <span class="badge">Passo 2 de 3 • Cardápio</span>
@@ -199,27 +221,27 @@
 
         <div class="card">
           <div class="option-grid" role="group" aria-label="Opções de cardápio">
-            <button type="button" class="opt" data-group="comida" onclick="pick('comida','Sushi de Magikarp','s3', this)">
+            <button type="button" class="opt" onclick="Pokesage.pick('comida','Sushi de Magikarp','magikarp','s3', this)">
               <span class="opt-dex">#129 MAGIKARP</span>
-              <img id="os-magikarp" src="./assets/sprites/magikarp.png" alt="Magikarp" width="60" height="60" />
+              <img data-poke="magikarp" src="./assets/sprites/magikarp.png" alt="Magikarp" width="60" height="60" />
               <span>Sushi de Magikarp</span>
               <span class="opt-sub">Barca japonesa completa</span>
             </button>
-            <button type="button" class="opt" data-group="comida" onclick="pick('comida','Pizza de Slowpoke','s3', this)">
+            <button type="button" class="opt" onclick="Pokesage.pick('comida','Pizza de Slowpoke','slowpoke','s3', this)">
               <span class="opt-dex">#079 SLOWPOKE</span>
-              <img id="os-slowpoke" src="./assets/sprites/slowpoke.png" alt="Slowpoke" width="60" height="60" />
+              <img data-poke="slowpoke" src="./assets/sprites/slowpoke.png" alt="Slowpoke" width="60" height="60" />
               <span>Pizza de Slowpoke</span>
               <span class="opt-sub">Forno a lenha sem pressa</span>
             </button>
-            <button type="button" class="opt" data-group="comida" onclick="pick('comida','Café da Jigglypuff','s3', this)">
+            <button type="button" class="opt" onclick="Pokesage.pick('comida','Café da Jigglypuff','jigglypuff','s3', this)">
               <span class="opt-dex">#039 JIGGLYPUFF</span>
-              <img id="os-jigglypuff" src="./assets/sprites/jigglypuff.png" alt="Jigglypuff" width="60" height="60" />
+              <img data-poke="jigglypuff" src="./assets/sprites/jigglypuff.png" alt="Jigglypuff" width="60" height="60" />
               <span>Café da Jigglypuff</span>
               <span class="opt-sub">Doces, café e conversa</span>
             </button>
-            <button type="button" class="opt" data-group="comida" onclick="pick('comida','Sorvete Snover','s3', this)">
+            <button type="button" class="opt" onclick="Pokesage.pick('comida','Sorvete Snover','snover','s3', this)">
               <span class="opt-dex">#459 SNOVER</span>
-              <img id="os-snover" src="./assets/sprites/snover.png" alt="Snover" width="60" height="60" />
+              <img data-poke="snover" src="./assets/sprites/snover.png" alt="Snover" width="60" height="60" />
               <span>Sorvete Snover</span>
               <span class="opt-sub">Gelato artesanal geladinho</span>
             </button>
@@ -230,7 +252,7 @@
       <!-- SCREEN 3: STEP 3 (DATE/TIME) -->
       <div id="s3" class="screen theme-step-3 hidden">
         <div class="step-header">
-          <button type="button" class="back-btn" onclick="goTo('s2')">
+          <button type="button" class="back-btn" onclick="Pokesage.goTo('s2')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
@@ -246,10 +268,10 @@
         </div>
 
         <div class="sprite-stage-outer">
-          <div class="sprite-wrap" id="sw3" role="button" tabindex="0" aria-label="Eevee — clique para interagir" onclick="pokeCry('eevee')">
-            <img src="./assets/sprites/eevee.png" alt="Eevee" width="96" height="96" />
+          <div class="sprite-wrap" id="sw3" role="button" tabindex="0" aria-label="Eevee — clique para interagir" onclick="Pokesage.pokeCry('eevee')">
+            <img data-poke="eevee" src="./assets/sprites/eevee.png" alt="Eevee" width="100" height="100" />
           </div>
-          <span class="dex-pill">#133 EEVEE</span>
+          <span class="dex-pill"><span class="shiny-star-tag hidden" aria-hidden="true">★</span> #133 EEVEE</span>
         </div>
 
         <span class="badge">Passo 3 de 3 • Data</span>
@@ -258,27 +280,27 @@
 
         <div class="card">
           <div class="option-grid" role="group" aria-label="Opções de data">
-            <button type="button" class="opt" data-group="data" onclick="pick('data','Hoje mesmo!','s4', this)">
+            <button type="button" class="opt" onclick="Pokesage.pick('data','Hoje mesmo!','raichu','s4', this)">
               <span class="opt-dex">#026 RAICHU</span>
-              <img id="os-raichu" src="./assets/sprites/raichu.png" alt="Raichu" width="60" height="60" />
+              <img data-poke="raichu" src="./assets/sprites/raichu.png" alt="Raichu" width="60" height="60" />
               <span>Hoje mesmo!</span>
               <span class="opt-sub">Ataque Rápido, já!</span>
             </button>
-            <button type="button" class="opt" data-group="data" onclick="pick('data','Fim de semana','s4', this)">
+            <button type="button" class="opt" onclick="Pokesage.pick('data','Fim de semana','eevee','s4', this)">
               <span class="opt-dex">#133 EEVEE</span>
-              <img id="os-eevee" src="./assets/sprites/eevee.png" alt="Eevee" width="60" height="60" />
+              <img data-poke="eevee" src="./assets/sprites/eevee.png" alt="Eevee" width="60" height="60" />
               <span>Fim de semana</span>
               <span class="opt-sub">Sábado ou domingo</span>
             </button>
-            <button type="button" class="opt" data-group="data" onclick="pick('data','Semana que vem','s4', this)">
+            <button type="button" class="opt" onclick="Pokesage.pick('data','Semana que vem','sylveon','s4', this)">
               <span class="opt-dex">#700 SYLVEON</span>
-              <img id="os-sylveon" src="./assets/sprites/sylveon.png" alt="Sylveon" width="60" height="60" />
+              <img data-poke="sylveon" src="./assets/sprites/sylveon.png" alt="Sylveon" width="60" height="60" />
               <span>Semana que vem</span>
               <span class="opt-sub">Planejado com calma</span>
             </button>
-            <button type="button" class="opt" data-group="data" onclick="pick('data','Quando Magikarp evoluir','s4', this)">
+            <button type="button" class="opt" onclick="Pokesage.pick('data','Quando Magikarp evoluir','gyarados','s4', this)">
               <span class="opt-dex">#130 GYARADOS</span>
-              <img id="os-gyarados" src="./assets/sprites/gyarados.png" alt="Gyarados" width="60" height="60" />
+              <img data-poke="gyarados" src="./assets/sprites/gyarados.png" alt="Gyarados" width="60" height="60" />
               <span>Quando Magikarp evoluir</span>
               <span class="opt-sub">Nível 20 (ou bem antes!)</span>
             </button>
@@ -286,10 +308,32 @@
         </div>
       </div>
 
-      <!-- SCREEN 4: CONFIRMED TRAINER PASS -->
+      <!-- SCREEN CAPTURE: LOVE BALL SEQUENCE -->
+      <div id="sCapture" class="screen hidden" aria-live="polite">
+        <div class="capture-stage">
+          <div class="capture-stars" id="captureStars" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="pokeball-wrap">
+            <svg id="captureBall" class="pokeball-svg" viewBox="0 0 120 120" aria-label="Love Ball realizando captura">
+              <circle cx="60" cy="60" r="52" fill="var(--color-card)" stroke="var(--color-foreground)" stroke-width="5"/>
+              <path d="M8 60 A52 52 0 0 1 112 60 Z" fill="var(--color-primary)" stroke="var(--color-foreground)" stroke-width="5"/>
+              <path d="M60 22 C54 15, 42 18, 42 28 C42 36, 60 46, 60 46 C60 46, 78 36, 78 28 C78 18, 66 15, 60 22 Z" fill="var(--color-accent)" opacity="0.92"/>
+              <line x1="8" y1="60" x2="112" y2="60" stroke="var(--color-foreground)" stroke-width="6"/>
+              <circle cx="60" cy="60" r="15" fill="var(--color-card)" stroke="var(--color-foreground)" stroke-width="5"/>
+              <circle cx="60" cy="60" r="7" fill="var(--color-primary)"/>
+            </svg>
+          </div>
+          <p class="capture-status" id="captureStatus">Jogando Love Ball...</p>
+        </div>
+      </div>
+
+      <!-- SCREEN 4: CONFIRMED HOLOFOIL TRAINER PASS -->
       <div id="s4" class="screen hidden">
         <div class="step-header">
-          <button type="button" class="back-btn" onclick="goTo('s3')">
+          <button type="button" class="back-btn" onclick="Pokesage.goTo('s3')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
@@ -305,19 +349,38 @@
         </div>
 
         <div class="sprite-stage-outer">
-          <div class="sprite-wrap" id="sw4" role="button" tabindex="0" aria-label="Togekiss — clique para comemorar" onclick="pokeCry('togekiss')">
-            <img src="./assets/sprites/togekiss.png" alt="Togekiss" width="96" height="96" />
+          <div class="sprite-wrap" id="sw4" role="button" tabindex="0" aria-label="Togekiss — clique para comemorar" onclick="Pokesage.pokeCry('togekiss')">
+            <img data-poke="togekiss" src="./assets/sprites/togekiss.png" alt="Togekiss" width="100" height="100" />
           </div>
-          <span class="dex-pill">#468 TOGEKISS</span>
+          <span class="dex-pill"><span class="shiny-star-tag hidden" aria-hidden="true">★</span> #468 TOGEKISS</span>
         </div>
 
         <span class="badge">Date confirmado!</span>
-        <h2 class="title">Perfeito, treinador(a)!</h2>
+        <h2 class="title" id="s4Title">Perfeito, treinador(a)!</h2>
 
-        <div class="trainer-pass" aria-label="Resumo do Passaporte do Encontro">
+        <div class="trainer-pass" id="trainerPass" aria-label="Resumo do Passaporte Pokesage">
           <div class="pass-header">
             <span class="pass-id">PASSAPORTE #0214</span>
             <span class="pass-lvl">NV. 100</span>
+          </div>
+
+          <!-- Chosen Pokémon Team -->
+          <div class="team-strip" aria-label="Equipe escolhida para o encontro">
+            <div class="team-member">
+              <img id="teamLocalImg" data-poke="vaporeon" src="./assets/sprites/vaporeon.png" alt="Vaporeon" width="48" height="48" />
+              <span class="team-role">Região</span>
+              <span class="team-poke" id="teamLocalName">Vaporeon</span>
+            </div>
+            <div class="team-member">
+              <img id="teamComidaImg" data-poke="magikarp" src="./assets/sprites/magikarp.png" alt="Magikarp" width="48" height="48" />
+              <span class="team-role">Cardápio</span>
+              <span class="team-poke" id="teamComidaName">Magikarp</span>
+            </div>
+            <div class="team-member">
+              <img id="teamDataImg" data-poke="eevee" src="./assets/sprites/eevee.png" alt="Eevee" width="48" height="48" />
+              <span class="team-role">Data</span>
+              <span class="team-poke" id="teamDataName">Eevee</span>
+            </div>
           </div>
 
           <div class="sum-row">
@@ -330,7 +393,7 @@
             </span>
             <span class="sum-val-wrap">
               <span class="sum-val" id="r-local">Cidade Cerúlea</span>
-              <button type="button" class="sum-change-btn" onclick="goTo('s1')" aria-label="Trocar local">Trocar</button>
+              <button type="button" class="sum-change-btn" onclick="Pokesage.goTo('s1')" aria-label="Trocar local">Trocar</button>
             </span>
           </div>
 
@@ -347,7 +410,7 @@
             </span>
             <span class="sum-val-wrap">
               <span class="sum-val" id="r-comida">Sushi de Magikarp</span>
-              <button type="button" class="sum-change-btn" onclick="goTo('s2')" aria-label="Trocar comida">Trocar</button>
+              <button type="button" class="sum-change-btn" onclick="Pokesage.goTo('s2')" aria-label="Trocar comida">Trocar</button>
             </span>
           </div>
 
@@ -363,7 +426,7 @@
             </span>
             <span class="sum-val-wrap">
               <span class="sum-val" id="r-data">Fim de semana</span>
-              <button type="button" class="sum-change-btn" onclick="goTo('s3')" aria-label="Trocar data">Trocar</button>
+              <button type="button" class="sum-change-btn" onclick="Pokesage.goTo('s3')" aria-label="Trocar data">Trocar</button>
             </span>
           </div>
 
@@ -386,7 +449,7 @@
             class="note-input"
             maxlength="70"
             placeholder="Ex.: Sábado às 19h30, passo pra te buscar!"
-            oninput="updateNote(this.value)"
+            oninput="Pokesage.updateNote(this.value)"
           />
         </div>
 
@@ -399,55 +462,176 @@
         <p class="final-note">Você foi capturado(a) com uma Love Ball.<br>Sem escapatória: encontro nível 100 confirmado.</p>
 
         <div class="action-grid">
-          <button type="button" class="btn-action primary-span" onclick="shareWhatsApp()">
+          <button type="button" class="btn-action primary-span" onclick="Pokesage.shareWhatsApp()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M22 2L11 13"></path>
               <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
             </svg>
             Enviar confirmação no WhatsApp
           </button>
-          <button type="button" class="btn-action" onclick="copyInvite()">
+          <button type="button" class="btn-action" onclick="Pokesage.downloadTicketPNG()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            Baixar Bilhete PNG
+          </button>
+          <button type="button" class="btn-action" onclick="Pokesage.copyInvite()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
               <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
             </svg>
-            Copiar bilhete
+            Copiar texto
           </button>
-          <button type="button" class="btn-action" onclick="downloadCalendar()">
+          <button type="button" class="btn-action" onclick="Pokesage.downloadCalendar()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
-            Salvar na agenda
+            Salvar agenda (.ics)
+          </button>
+          <button type="button" class="btn-action" onclick="Pokesage.toggleStudioModal(true)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+            Criar minha Pokesage
           </button>
         </div>
       </div>
     </section>
 
     <footer class="page-footer">
-      <p>Feito com carinho • Sprites oficiais via PokéAPI</p>
+      <p>
+        Pokesage por
+        <a class="footer-link" href="https://github.com/Miqueias-Henrique" target="_blank" rel="noopener noreferrer">Miqueias Carvalho</a>
+        • Sprites oficiais via PokéAPI
+      </p>
     </footer>
   </main>
 
-  <!-- Accessible Pokédex Modal Dialog -->
-  <div id="dexModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="dexModalTitle" onclick="handleBackdropClick(event)">
+  <!-- INTERACTIVE POKÉDEX MODAL DIALOG -->
+  <div id="dexModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="dexModalTitle" onclick="if (event.target.id === 'dexModal') Pokesage.toggleDexModal(false)">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 id="dexModalTitle" class="modal-title">Pokédex do Encontro (15)</h2>
-        <button type="button" class="icon-btn" onclick="toggleDexModal(false)" aria-label="Fechar Pokédex">
+        <h2 id="dexModalTitle" class="modal-title">Pokédex Pokesage (15)</h2>
+        <button type="button" class="icon-btn" onclick="Pokesage.toggleDexModal(false)" aria-label="Fechar Pokédex">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
         </button>
       </div>
-      <p class="note-label">Equipe escalada para garantir que esse encontro seja inesquecível:</p>
+
+      <div class="segmented-bar">
+        <span class="note-label" style="margin-bottom:0;">Toque em um Pokémon para ver a ficha:</span>
+        <div class="segmented-tabs" role="tablist" aria-label="Visualização de sprites">
+          <button type="button" id="tabDexNormal" class="seg-btn" role="tab" aria-selected="true">Normal</button>
+          <button type="button" id="tabDexShiny" class="seg-btn" role="tab" aria-selected="false">★ Shiny</button>
+        </div>
+      </div>
+
+      <div class="dex-inspector" aria-live="polite">
+        <button type="button" id="dexInspSpriteBtn" class="dex-inspector-sprite" aria-label="Tocar som do Pokémon">
+          <img id="dexInspSprite" src="./assets/sprites/pikachu.png" alt="Pikachu" width="48" height="48" />
+        </button>
+        <div class="dex-inspector-body">
+          <div class="dex-inspector-top">
+            <span class="dex-inspector-name" id="dexInspName">#025 Pikachu</span>
+            <span class="dex-type-pill" id="dexInspType">Elétrico</span>
+          </div>
+          <p class="dex-inspector-desc" id="dexInspDesc"></p>
+          <div class="dex-stat-row">
+            <span>CHARM</span>
+            <div class="dex-stat-track"><div class="dex-stat-fill" id="dexInspFill"></div></div>
+            <span id="dexInspVal">98/100</span>
+          </div>
+        </div>
+      </div>
+
       <div class="dex-list" id="dexGrid"></div>
     </div>
   </div>
 
-  <!-- Accessible Toast Notification -->
+  <!-- POKESAGE STUDIO: CUSTOM INVITE LINK GENERATOR -->
+  <div id="studioModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="studioModalTitle" onclick="if (event.target.id === 'studioModal') Pokesage.toggleStudioModal(false)">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="studioModalTitle" class="modal-title">Estúdio Pokesage</h2>
+        <button type="button" class="icon-btn" onclick="Pokesage.toggleStudioModal(false)" aria-label="Fechar Estúdio Pokesage">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <p class="note-label">Personalize seu convite e gere um link exclusivo (sem cadastro, funciona direto no navegador).</p>
+
+      <form class="studio-form" onsubmit="event.preventDefault(); Pokesage.copyStudioLink();">
+        <div class="studio-row-2">
+          <div class="studio-field">
+            <label class="note-label" for="stFrom">Seu nome</label>
+            <input type="text" id="stFrom" class="note-input" maxlength="28" placeholder="Ex.: Miqueias" />
+          </div>
+          <div class="studio-field">
+            <label class="note-label" for="stTo">Para quem</label>
+            <input type="text" id="stTo" class="note-input" maxlength="28" placeholder="Ex.: Maria" />
+          </div>
+        </div>
+
+        <div class="studio-field">
+          <span class="note-label">Pokémon mensageiro</span>
+          <div class="messenger-picker" id="messengerPicker" role="group" aria-label="Escolher Pokémon mensageiro"></div>
+        </div>
+
+        <div class="studio-field">
+          <label class="note-label" for="stHeadline">Título do convite (opcional)</label>
+          <input type="text" id="stHeadline" class="note-input" maxlength="44" placeholder="Ex.: Ei, Maria!" />
+        </div>
+
+        <div class="studio-field">
+          <label class="note-label" for="stMessage">Mensagem na caixa de diálogo (opcional)</label>
+          <textarea id="stMessage" class="note-input studio-textarea" maxlength="160" placeholder="Ex.: Pikachu usou Cute Charm em você. Bora sair nesse sábado?"></textarea>
+        </div>
+
+        <div class="studio-field">
+          <label class="note-label" for="stWhatsApp">Seu WhatsApp com DDD (opcional — para receber a resposta)</label>
+          <input type="tel" id="stWhatsApp" class="note-input" maxlength="15" placeholder="Ex.: 5562999999999" />
+        </div>
+
+        <div class="studio-switch-row">
+          <span>Abrir convite no Modo ★ Shiny</span>
+          <button type="button" id="stShinySwitch" class="studio-switch" role="switch" aria-checked="false" aria-label="Ativar modo Shiny por padrão">
+            <span class="studio-switch-thumb"></span>
+          </button>
+        </div>
+
+        <div class="studio-field">
+          <span class="note-label">Seu link compartilhável</span>
+          <div class="studio-link-box" id="studioLinkOut" aria-live="polite"></div>
+        </div>
+
+        <div class="action-grid">
+          <button type="submit" class="btn-action primary-span">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+            </svg>
+            Copiar link da minha Pokesage
+          </button>
+          <button type="button" class="btn-action full-span" onclick="Pokesage.previewStudioNow()">
+            Visualizar meu convite agora
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ACCESSIBLE TOAST NOTIFICATION -->
   <div id="toast" class="toast hidden" role="status" aria-live="polite">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <polyline points="20 6 9 17 4 12"></polyline>
@@ -455,298 +639,6 @@
     <span id="toastMsg">Bilhete copiado!</span>
   </div>
 
-  <script>
-    const BASE = './assets/sprites/';
-    const REMOTE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
-    const POKES = {
-      pikachu: 25, clefairy: 35, vaporeon: 134, flareon: 136,
-      jolteon: 135, leafeon: 470, magikarp: 129, slowpoke: 79,
-      jigglypuff: 39, snover: 459, raichu: 26, eevee: 133,
-      sylveon: 700, gyarados: 130, togekiss: 468
-    };
-
-    const POKE_LABELS = {
-      pikachu: 'Pikachu', clefairy: 'Clefairy', vaporeon: 'Vaporeon', flareon: 'Flareon',
-      jolteon: 'Jolteon', leafeon: 'Leafeon', magikarp: 'Magikarp', slowpoke: 'Slowpoke',
-      jigglypuff: 'Jigglypuff', snover: 'Snover', raichu: 'Raichu', eevee: 'Eevee',
-      sylveon: 'Sylveon', gyarados: 'Gyarados', togekiss: 'Togekiss'
-    };
-
-    function spriteUrl(name) {
-      return BASE + name + '.png';
-    }
-
-    /* 8-bit Web Audio Synthesizer */
-    let soundEnabled = true;
-    let audioCtx = null;
-
-    function getAudioCtx() {
-      if (!audioCtx && (window.AudioContext || window.webkitAudioContext)) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      return audioCtx;
-    }
-
-    function playTone(freqs, durationMs = 80, type = 'square') {
-      if (!soundEnabled) return;
-      try {
-        const ctx = getAudioCtx();
-        if (!ctx) return;
-        const now = ctx.currentTime;
-        freqs.forEach((f, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = type;
-          osc.frequency.setValueAtTime(f, now + idx * (durationMs / 1000));
-          gain.gain.setValueAtTime(0.06, now + idx * (durationMs / 1000));
-          gain.gain.exponentialRampToValueAtTime(0.001, now + (idx + 1) * (durationMs / 1000));
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now + idx * (durationMs / 1000));
-          osc.stop(now + (idx + 1) * (durationMs / 1000));
-        });
-      } catch (_) {}
-    }
-
-    function pokeCry(name) {
-      playTone([523.25, 659.25, 783.99, 1046.5], 65, 'triangle');
-      showToast((POKE_LABELS[name] || 'Pokémon') + ' está torcendo pelo nosso date!');
-    }
-
-    /* State & Choices */
-    const choices = {
-      local: 'Cidade Cerúlea',
-      comida: 'Sushi de Magikarp',
-      data: 'Fim de semana',
-      nota: ''
-    };
-
-    let noCount = 0;
-    const msgs = [
-      'Esse botão está com defeito...',
-      'Eita, escapou pela grama alta!',
-      'Pikachu bloqueou a saída!',
-      'Pokédex informa: opção inválida.',
-      'Botão Não fugiu da batalha!',
-      'É destino, aceita logo vai!',
-      'Ok, só restou o Sim!'
-    ];
-
-    function runaway() {
-      const btn = document.getElementById('btnNo');
-      const msg = document.getElementById('noMsg');
-      const arena = document.getElementById('evadeArena');
-      if (!btn || !msg) return;
-
-      noCount++;
-      playTone([300, 220], 55, 'sawtooth');
-      msg.textContent = msgs[Math.min(noCount - 1, msgs.length - 1)];
-
-      const maxX = arena ? Math.max(24, Math.min(72, (arena.clientWidth - btn.offsetWidth) / 2.4)) : 48;
-      const rx = (noCount % 2 === 0 ? 1 : -1) * Math.floor(20 + Math.random() * maxX);
-      const ry = (Math.random() > 0.5 ? 1 : -1) * Math.floor(4 + Math.random() * 14);
-
-      btn.style.setProperty('--tx', rx + 'px');
-      btn.style.setProperty('--ty', ry + 'px');
-      btn.style.transform = `translate(${rx}px, ${ry}px)`;
-      btn.style.animation = 'shake 0.3s';
-      setTimeout(() => { btn.style.animation = ''; }, 320);
-
-      if (noCount >= 3) {
-        btn.style.opacity = String(Math.max(0.12, 1 - (noCount - 2) * 0.22));
-      }
-      if (noCount >= 7) {
-        btn.style.opacity = '0';
-        btn.style.pointerEvents = 'none';
-        btn.setAttribute('aria-hidden', 'true');
-        btn.tabIndex = -1;
-      }
-    }
-
-    function goTo(id) {
-      playTone([440, 587.33], 60, 'triangle');
-      document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-      const target = document.getElementById(id);
-      if (target) target.classList.remove('hidden');
-      if (id === 's4') {
-        playTone([523.25, 659.25, 783.99, 1046.5], 85, 'triangle');
-      }
-    }
-
-    function pick(key, val, next, btnEl) {
-      choices[key] = val;
-      if (btnEl && btnEl.parentElement) {
-        btnEl.parentElement.querySelectorAll('.opt').forEach(b => b.setAttribute('aria-pressed', 'false'));
-        btnEl.setAttribute('aria-pressed', 'true');
-      }
-      if (next === 's4') {
-        document.getElementById('r-local').textContent = choices['local'] || '';
-        document.getElementById('r-comida').textContent = choices['comida'] || '';
-        document.getElementById('r-data').textContent = choices['data'] || '';
-        document.getElementById('r-nota').textContent = choices['nota'] ? choices['nota'] : 'Combinado!';
-      }
-      goTo(next);
-    }
-
-    function updateNote(val) {
-      choices.nota = val.trim();
-      const el = document.getElementById('r-nota');
-      if (el) el.textContent = choices.nota || 'Combinado!';
-    }
-
-    function buildSummaryText() {
-      const lines = [
-        'Passaporte Pokesage Confirmado (Nv. 100)!',
-        `Local: ${choices.local}`,
-        `Cardápio: ${choices.comida}`,
-        `Quando: ${choices.data}`
-      ];
-      if (choices.nota) lines.push(`Recado: ${choices.nota}`);
-      return lines.join('\n');
-    }
-
-    function copyInvite() {
-      const text = buildSummaryText();
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-          showToast('Bilhete copiado para a área de transferência!');
-        }).catch(() => {
-          showToast('Bilhete pronto para compartilhar!');
-        });
-      } else {
-        showToast('Bilhete pronto para compartilhar!');
-      }
-      playTone([659.25, 880], 70, 'triangle');
-    }
-
-    function shareWhatsApp() {
-      const text = encodeURIComponent(buildSummaryText());
-      window.open(`https://wa.me/?text=${text}`, '_blank', 'noopener,noreferrer');
-    }
-
-    function downloadCalendar() {
-      const now = new Date();
-      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2, 19, 30, 0);
-      const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2, 22, 0, 0);
-      const fmt = d => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-      const desc = `Encontro Pokémon — Local: ${choices.local} | Comida: ${choices.comida} | Quando: ${choices.data}${choices.nota ? ' | Nota: ' + choices.nota : ''}`;
-      const ics = [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//Pokesage//PT-BR',
-        'BEGIN:VEVENT',
-        `DTSTART:${fmt(start)}`,
-        `DTEND:${fmt(end)}`,
-        `SUMMARY:Pokesage: ${choices.local} (${choices.comida})`,
-        `DESCRIPTION:${desc}`,
-        `LOCATION:${choices.local}`,
-        'END:VEVENT',
-        'END:VCALENDAR'
-      ].join('\r\n');
-
-      const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'pokesage-encontro.ics';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      showToast('Evento salvo para sua agenda!');
-    }
-
-    let toastTimer = null;
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      const msgEl = document.getElementById('toastMsg');
-      if (!toast || !msgEl) return;
-      msgEl.textContent = message;
-      toast.classList.remove('hidden');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        toast.classList.add('hidden');
-      }, 2600);
-    }
-
-    /* Theme Toggle (Light / Dark) */
-    function setDarkTheme(isDark) {
-      document.documentElement.classList.toggle('dark', isDark);
-      const btn = document.getElementById('btnTheme');
-      const moon = document.getElementById('iconMoon');
-      const sun = document.getElementById('iconSun');
-      if (btn) btn.setAttribute('aria-pressed', String(isDark));
-      if (moon) moon.classList.toggle('hidden', isDark);
-      if (sun) sun.classList.toggle('hidden', !isDark);
-      try { localStorage.setItem('pokesage-theme', isDark ? 'dark' : 'light'); } catch (_) {}
-    }
-
-    /* Pokédex Modal */
-    function toggleDexModal(open) {
-      const modal = document.getElementById('dexModal');
-      const btn = document.getElementById('btnDex');
-      if (!modal || !btn) return;
-      const shouldOpen = typeof open === 'boolean' ? open : modal.classList.contains('hidden');
-      modal.classList.toggle('hidden', !shouldOpen);
-      btn.setAttribute('aria-expanded', String(shouldOpen));
-      playTone(shouldOpen ? [523.25, 659.25] : [659.25, 523.25], 55, 'triangle');
-    }
-
-    function handleBackdropClick(e) {
-      if (e.target && e.target.id === 'dexModal') {
-        toggleDexModal(false);
-      }
-    }
-
-    function populateDexGrid() {
-      const grid = document.getElementById('dexGrid');
-      if (!grid) return;
-      grid.innerHTML = '';
-      Object.entries(POKES).forEach(([key, num]) => {
-        const card = document.createElement('div');
-        card.className = 'dex-item';
-        const numStr = '#' + String(num).padStart(3, '0');
-        card.innerHTML = `
-          <span class="dex-item-num">${numStr}</span>
-          <img src="${spriteUrl(key)}" alt="${POKE_LABELS[key]}" loading="lazy" />
-          <span class="dex-item-name">${POKE_LABELS[key]}</span>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      try {
-        const saved = localStorage.getItem('pokesage-theme');
-        if (saved === 'dark') setDarkTheme(true);
-      } catch (_) {}
-
-      document.getElementById('btnTheme')?.addEventListener('click', () => {
-        const isDark = !document.documentElement.classList.contains('dark');
-        setDarkTheme(isDark);
-        playTone([587.33, 783.99], 50, 'sine');
-      });
-
-      document.getElementById('btnSound')?.addEventListener('click', (e) => {
-        soundEnabled = !soundEnabled;
-        const btn = e.currentTarget;
-        btn.setAttribute('aria-pressed', String(soundEnabled));
-        document.getElementById('iconSoundOn')?.classList.toggle('hidden', !soundEnabled);
-        document.getElementById('iconSoundOff')?.classList.toggle('hidden', soundEnabled);
-        if (soundEnabled) playTone([523.25, 783.99], 60, 'triangle');
-      });
-
-      document.getElementById('btnDex')?.addEventListener('click', () => toggleDexModal());
-
-      window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') toggleDexModal(false);
-      });
-
-      populateDexGrid();
-    });
-  </script>
+  <script src="./assets/js/pokesage.js" defer></script>
 </body>
 </html>

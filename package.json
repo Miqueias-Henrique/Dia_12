@@ -1,7 +1,7 @@
 {
   "name": "pokesage",
-  "version": "2.0.0",
-  "description": "Pokesage — Convite interativo inspirado em Pokémon com Design Tokens (W3C DTCG), Tailwind CSS v4 e Dark Mode",
+  "version": "3.0.0",
+  "description": "Pokesage — Estação interativa de convites Pokémon com Estúdio gerador de links zero-backend, bilhete colecionável PNG (Canvas 2D), modo ★ Shiny, Web Audio 8-bit, Design Tokens (W3C DTCG) e Tailwind CSS v4",
   "main": "index.html",
   "scripts": {
     "tokens:css": "node ~/.gemini/skills/design-tokens/scripts/generate-tokens.cjs -c tokens.json -o src/tokens.css -f css",
@@ -18,9 +18,12 @@
   "keywords": [
     "pokesage",
     "pokemon",
-    "date-invite",
+    "interactive-app",
     "design-tokens",
-    "tailwindcss-v4"
+    "tailwindcss-v4",
+    "web-audio-api",
+    "canvas-2d",
+    "github-pages"
   ],
   "author": "Miqueias Henrique",
   "license": "ISC",
