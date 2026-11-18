@@ -3,449 +3,744 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quer sair comigo? 💕</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: #fff0f5;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-    }
-
-    .wrap {
-      width: 100%;
-      max-width: 460px;
-    }
-
-    .screen {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      animation: fadeUp 0.4s ease;
-    }
-
-    .hidden { display: none !important; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes float {
-      0%,100% { transform: translateY(0); }
-      50%      { transform: translateY(-10px); }
-    }
-    @keyframes shake {
-      0%,100% { transform: translateX(0) translateY(var(--ty,0px)); }
-      20%     { transform: translateX(-8px) translateY(var(--ty,0px)); }
-      40%     { transform: translateX(8px) translateY(var(--ty,0px)); }
-      60%     { transform: translateX(-4px) translateY(var(--ty,0px)); }
-      80%     { transform: translateX(4px) translateY(var(--ty,0px)); }
-    }
-    @keyframes burst {
-      0%,100% { transform: scale(1); }
-      50%     { transform: scale(1.15); }
-    }
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-
-    .sprite-wrap {
-      width: 130px; height: 130px;
-      border-radius: 50%;
-      background: #FBEAF0;
-      border: 2.5px solid #F4C0D1;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 1.25rem;
-      animation: float 2.4s ease-in-out infinite;
-      overflow: hidden;
-    }
-
-    .sprite-wrap img {
-      width: 104px; height: 104px;
-      image-rendering: pixelated;
-      object-fit: contain;
-    }
-
-    .spinner {
-      width: 36px; height: 36px;
-      border: 3px solid #F4C0D1;
-      border-top-color: #D4537E;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    .badge {
-      display: inline-block;
-      background: #FBEAF0;
-      color: #72243E;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 4px 14px;
-      border-radius: 20px;
-      border: 1px solid #F4C0D1;
-      margin-bottom: 0.75rem;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .title {
-      font-size: 24px;
-      font-weight: 700;
-      color: #2c1a24;
-      margin-bottom: 0.4rem;
-      line-height: 1.3;
-    }
-
-    .subtitle {
-      font-size: 15px;
-      color: #7a5060;
-      margin-bottom: 1.75rem;
-      line-height: 1.7;
-    }
-
-    .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-
-    .btn-yes {
-      padding: 12px 36px;
-      border-radius: 100px;
-      background: #D4537E;
-      border: none;
-      color: #fff;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.12s;
-      box-shadow: 0 4px 14px #D4537E44;
-    }
-    .btn-yes:hover { background: #b83d68; }
-    .btn-yes:active { transform: scale(0.96); }
-
-    .btn-no {
-      padding: 12px 36px;
-      border-radius: 100px;
-      background: #f5edf1;
-      border: 1px solid #e8cdd8;
-      color: #9a7080;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.15s;
-      position: relative;
-    }
-
-    .no-msg {
-      font-size: 13px;
-      color: #D4537E;
-      min-height: 20px;
-      margin-top: 0.75rem;
-      font-style: italic;
-    }
-
-    .progress-row { display: flex; gap: 7px; justify-content: center; margin-bottom: 1.5rem; }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: #e8cdd8; transition: background 0.35s; }
-    .dot.done { background: #D4537E; }
-
-    .card {
-      background: #fff;
-      border: 1px solid #f0dce6;
-      border-radius: 20px;
-      padding: 1.25rem;
-      width: 100%;
-      margin-top: 0.5rem;
-      box-shadow: 0 2px 16px #D4537E11;
-    }
-
-    .option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-    .opt {
-      padding: 14px 8px;
-      border-radius: 14px;
-      border: 1.5px solid #f0dce6;
-      background: #fff8fb;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
-      color: #2c1a24;
-      line-height: 1.4;
-      transition: all 0.18s;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-    .opt:hover { border-color: #D4537E; background: #FBEAF0; color: #72243E; transform: translateY(-3px); box-shadow: 0 4px 12px #D4537E22; }
-    .opt:active { transform: scale(0.97); }
-
-    .opt img {
-      width: 60px; height: 60px;
-      image-rendering: pixelated;
-      object-fit: contain;
-    }
-
-    .opt-mini-spinner {
-      width: 22px; height: 22px;
-      border: 2px solid #F4C0D1;
-      border-top-color: #D4537E;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    .summary-card {
-      background: #fff;
-      border: 1px solid #f0dce6;
-      border-radius: 20px;
-      padding: 1.25rem;
-      width: 100%;
-      margin: 1rem 0;
-      text-align: left;
-      box-shadow: 0 2px 16px #D4537E11;
-    }
-    .sum-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid #f5edf1;
-      font-size: 14px;
-    }
-    .sum-row:last-child { border-bottom: none; }
-    .sum-key { color: #9a7080; }
-    .sum-val { font-weight: 700; color: #2c1a24; }
-
-    .heart-row { font-size: 22px; margin: 0.5rem 0; letter-spacing: 8px; color: #D4537E; animation: burst 1.8s ease-in-out infinite; }
-    .final-note { font-size: 14px; color: #7a5060; line-height: 1.7; }
-  </style>
+  <meta name="description" content="Convite interativo inspirado em Pokémon para planejar nosso próximo encontro: escolha o lugar, o cardápio e o dia." />
+  <title>Quer sair comigo? — PokéDate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=JetBrains+Mono:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./dist/styles.css" />
 </head>
 <body>
-<div class="wrap">
+  <main class="wrap">
+    <section class="pokedex-shell" aria-label="Convite interativo PokéDate">
+      <!-- Top Pokédex Bar -->
+      <header class="pokedex-topbar">
+        <div class="led-cluster" aria-hidden="true">
+          <span class="led-lens"></span>
+          <span class="led-dot rose"></span>
+          <span class="led-dot amber"></span>
+          <span class="led-dot mint"></span>
+          <span class="brand-tag">POKÉDATE #012</span>
+        </div>
+        <div class="toolbar-actions">
+          <button type="button" class="icon-btn" id="btnSound" aria-pressed="true" aria-label="Ativar ou desativar efeitos sonoros 8-bit" title="Sons 8-bit">
+            <svg id="iconSoundOn" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+            </svg>
+            <svg id="iconSoundOff" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <line x1="23" y1="9" x2="17" y2="15"></line>
+              <line x1="17" y1="9" x2="23" y2="15"></line>
+            </svg>
+          </button>
+          <button type="button" class="icon-btn" id="btnDex" aria-haspopup="dialog" aria-expanded="false" aria-controls="dexModal" aria-label="Abrir guia Pokédex do encontro" title="Pokédex do Encontro">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="3"></circle>
+              <line x1="2" y1="12" x2="9" y2="12"></line>
+              <line x1="15" y1="12" x2="22" y2="12"></line>
+            </svg>
+          </button>
+          <button type="button" class="icon-btn" id="btnTheme" aria-pressed="false" aria-label="Alternar entre tema claro e escuro" title="Alternar tema">
+            <svg id="iconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg id="iconSun" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+        </div>
+      </header>
 
-  <div id="s0" class="screen">
-    <div class="sprite-wrap" id="sw0"><div class="spinner"></div></div>
-    <span class="badge">Mensagem do treinador</span>
-    <p class="title">Ei, você aí!</p>
-    <p class="subtitle">Pikachu usou <em>Cute Charm</em> em você.<br>Quer ser meu par nessa jornada?</p>
-    <div class="btn-row">
-      <button class="btn-yes" onclick="goTo('s1')">Sim, claro!</button>
-      <button class="btn-no" id="btnNo" onmouseover="runaway()" ontouchstart="runaway()">Não</button>
-    </div>
-    <p class="no-msg" id="noMsg"></p>
-  </div>
+      <!-- SCREEN 0: HERO INVITATION -->
+      <div id="s0" class="screen">
+        <div class="sprite-stage-outer">
+          <div class="sprite-wrap" id="sw0" role="button" tabindex="0" aria-label="Pikachu — clique para interagir" onclick="pokeCry('pikachu')">
+            <img src="./assets/sprites/pikachu.png" alt="Pikachu" width="96" height="96" />
+          </div>
+          <span class="dex-pill" id="pill0">#025 PIKACHU</span>
+        </div>
 
-  <div id="s1" class="screen hidden">
-    <div class="progress-row">
-      <div class="dot done"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
-    </div>
-    <div class="sprite-wrap" style="background:#E1F5EE;border-color:#9FE1CB;" id="sw1">
-      <div class="spinner" style="border-color:#9FE1CB;border-top-color:#1D9E75;"></div>
-    </div>
-    <span class="badge" style="background:#E1F5EE;color:#085041;border-color:#9FE1CB;">Passo 1 de 3</span>
-    <p class="title">Qual região vamos explorar?</p>
-    <p class="subtitle">Escolhe o cenário do nosso encontro:</p>
-    <div class="card">
-      <div class="option-grid">
-        <button class="opt" onclick="pick('local','🌊 Cidade Cerúlea','s2')">
-          <div class="opt-mini-spinner" id="os-vaporeon"></div>
-          <span>Cidade Cerúlea</span>
-        </button>
-        <button class="opt" onclick="pick('local','🌺 Ilha Vermelha','s2')">
-          <div class="opt-mini-spinner" id="os-flareon"></div>
-          <span>Ilha Vermelha</span>
-        </button>
-        <button class="opt" onclick="pick('local','🏔️ Monte Prata','s2')">
-          <div class="opt-mini-spinner" id="os-jolteon"></div>
-          <span>Monte Prata</span>
-        </button>
-        <button class="opt" onclick="pick('local','🌳 Floresta Verde','s2')">
-          <div class="opt-mini-spinner" id="os-leafeon"></div>
-          <span>Floresta Verde</span>
+        <span class="badge">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          Mensagem do treinador
+        </span>
+
+        <h1 class="title">Ei, você aí!</h1>
+        <p class="subtitle">Um convite especial apareceu no seu caminho. Vamos montar nosso roteiro em 3 passos?</p>
+
+        <div class="dialogue-box" role="region" aria-label="Diálogo do convite">
+          <div class="dialogue-speaker">
+            <span>PIKACHU PARCEIRO</span>
+            <span aria-hidden="true">▸</span>
+          </div>
+          <p class="dialogue-text">Pikachu usou <strong>Cute Charm</strong> em você. Quer ser meu par nessa jornada?</p>
+        </div>
+
+        <div class="evade-arena" id="evadeArena">
+          <div class="btn-row">
+            <button type="button" class="btn-yes" onclick="goTo('s1')">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+              </svg>
+              Sim, claro!
+            </button>
+            <button type="button" class="btn-no" id="btnNo" onmouseover="runaway()" ontouchstart="runaway()" onclick="runaway()">Não</button>
+          </div>
+        </div>
+        <p class="no-msg" id="noMsg" aria-live="polite"></p>
+      </div>
+
+      <!-- SCREEN 1: STEP 1 (LOCATION) -->
+      <div id="s1" class="screen theme-step-1 hidden">
+        <div class="step-header">
+          <button type="button" class="back-btn" onclick="goTo('s0')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Início
+          </button>
+          <div class="progress-row" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" aria-label="Passo 1 de 3">
+            <div class="dot current"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <span class="step-counter">01 / 03</span>
+        </div>
+
+        <div class="sprite-stage-outer">
+          <div class="sprite-wrap" id="sw1" role="button" tabindex="0" aria-label="Clefairy — clique para interagir" onclick="pokeCry('clefairy')">
+            <img src="./assets/sprites/clefairy.png" alt="Clefairy" width="96" height="96" />
+          </div>
+          <span class="dex-pill">#035 CLEFAIRY</span>
+        </div>
+
+        <span class="badge">Passo 1 de 3 • Região</span>
+        <h2 class="title">Qual região vamos explorar?</h2>
+        <p class="subtitle">Escolha o cenário do nosso encontro:</p>
+
+        <div class="card">
+          <div class="option-grid" role="group" aria-label="Opções de local">
+            <button type="button" class="opt" data-group="local" onclick="pick('local','Cidade Cerúlea','s2', this)">
+              <span class="opt-dex">#134 VAPOREON</span>
+              <img id="os-vaporeon" src="./assets/sprites/vaporeon.png" alt="Vaporeon" width="60" height="60" />
+              <span>Cidade Cerúlea</span>
+              <span class="opt-sub">Beira-mar e brisa fresca</span>
+            </button>
+            <button type="button" class="opt" data-group="local" onclick="pick('local','Ilha Vermelha','s2', this)">
+              <span class="opt-dex">#136 FLAREON</span>
+              <img id="os-flareon" src="./assets/sprites/flareon.png" alt="Flareon" width="60" height="60" />
+              <span>Ilha Vermelha</span>
+              <span class="opt-sub">Pôr do sol e clima quente</span>
+            </button>
+            <button type="button" class="opt" data-group="local" onclick="pick('local','Monte Prata','s2', this)">
+              <span class="opt-dex">#135 JOLTEON</span>
+              <img id="os-jolteon" src="./assets/sprites/jolteon.png" alt="Jolteon" width="60" height="60" />
+              <span>Monte Prata</span>
+              <span class="opt-sub">Mirante alto e estrelas</span>
+            </button>
+            <button type="button" class="opt" data-group="local" onclick="pick('local','Floresta Verde','s2', this)">
+              <span class="opt-dex">#470 LEAFEON</span>
+              <img id="os-leafeon" src="./assets/sprites/leafeon.png" alt="Leafeon" width="60" height="60" />
+              <span>Floresta Verde</span>
+              <span class="opt-sub">Ar livre e caminhada</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 2: STEP 2 (FOOD) -->
+      <div id="s2" class="screen theme-step-2 hidden">
+        <div class="step-header">
+          <button type="button" class="back-btn" onclick="goTo('s1')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Voltar
+          </button>
+          <div class="progress-row" role="progressbar" aria-valuenow="2" aria-valuemin="1" aria-valuemax="4" aria-label="Passo 2 de 3">
+            <div class="dot done"></div>
+            <div class="dot current"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <span class="step-counter">02 / 03</span>
+        </div>
+
+        <div class="sprite-stage-outer">
+          <div class="sprite-wrap" id="sw2" role="button" tabindex="0" aria-label="Jigglypuff — clique para interagir" onclick="pokeCry('jigglypuff')">
+            <img src="./assets/sprites/jigglypuff.png" alt="Jigglypuff" width="96" height="96" />
+          </div>
+          <span class="dex-pill">#039 JIGGLYPUFF</span>
+        </div>
+
+        <span class="badge">Passo 2 de 3 • Cardápio</span>
+        <h2 class="title">O que vamos comer?</h2>
+        <p class="subtitle">Escolha o cardápio do nosso encontro:</p>
+
+        <div class="card">
+          <div class="option-grid" role="group" aria-label="Opções de cardápio">
+            <button type="button" class="opt" data-group="comida" onclick="pick('comida','Sushi de Magikarp','s3', this)">
+              <span class="opt-dex">#129 MAGIKARP</span>
+              <img id="os-magikarp" src="./assets/sprites/magikarp.png" alt="Magikarp" width="60" height="60" />
+              <span>Sushi de Magikarp</span>
+              <span class="opt-sub">Barca japonesa completa</span>
+            </button>
+            <button type="button" class="opt" data-group="comida" onclick="pick('comida','Pizza de Slowpoke','s3', this)">
+              <span class="opt-dex">#079 SLOWPOKE</span>
+              <img id="os-slowpoke" src="./assets/sprites/slowpoke.png" alt="Slowpoke" width="60" height="60" />
+              <span>Pizza de Slowpoke</span>
+              <span class="opt-sub">Forno a lenha sem pressa</span>
+            </button>
+            <button type="button" class="opt" data-group="comida" onclick="pick('comida','Café da Jigglypuff','s3', this)">
+              <span class="opt-dex">#039 JIGGLYPUFF</span>
+              <img id="os-jigglypuff" src="./assets/sprites/jigglypuff.png" alt="Jigglypuff" width="60" height="60" />
+              <span>Café da Jigglypuff</span>
+              <span class="opt-sub">Doces, café e conversa</span>
+            </button>
+            <button type="button" class="opt" data-group="comida" onclick="pick('comida','Sorvete Snover','s3', this)">
+              <span class="opt-dex">#459 SNOVER</span>
+              <img id="os-snover" src="./assets/sprites/snover.png" alt="Snover" width="60" height="60" />
+              <span>Sorvete Snover</span>
+              <span class="opt-sub">Gelato artesanal geladinho</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 3: STEP 3 (DATE/TIME) -->
+      <div id="s3" class="screen theme-step-3 hidden">
+        <div class="step-header">
+          <button type="button" class="back-btn" onclick="goTo('s2')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Voltar
+          </button>
+          <div class="progress-row" role="progressbar" aria-valuenow="3" aria-valuemin="1" aria-valuemax="4" aria-label="Passo 3 de 3">
+            <div class="dot done"></div>
+            <div class="dot done"></div>
+            <div class="dot current"></div>
+            <div class="dot"></div>
+          </div>
+          <span class="step-counter">03 / 03</span>
+        </div>
+
+        <div class="sprite-stage-outer">
+          <div class="sprite-wrap" id="sw3" role="button" tabindex="0" aria-label="Eevee — clique para interagir" onclick="pokeCry('eevee')">
+            <img src="./assets/sprites/eevee.png" alt="Eevee" width="96" height="96" />
+          </div>
+          <span class="dex-pill">#133 EEVEE</span>
+        </div>
+
+        <span class="badge">Passo 3 de 3 • Data</span>
+        <h2 class="title">Quando a aventura começa?</h2>
+        <p class="subtitle">Escolha a data ideal para a gente:</p>
+
+        <div class="card">
+          <div class="option-grid" role="group" aria-label="Opções de data">
+            <button type="button" class="opt" data-group="data" onclick="pick('data','Hoje mesmo!','s4', this)">
+              <span class="opt-dex">#026 RAICHU</span>
+              <img id="os-raichu" src="./assets/sprites/raichu.png" alt="Raichu" width="60" height="60" />
+              <span>Hoje mesmo!</span>
+              <span class="opt-sub">Ataque Rápido, já!</span>
+            </button>
+            <button type="button" class="opt" data-group="data" onclick="pick('data','Fim de semana','s4', this)">
+              <span class="opt-dex">#133 EEVEE</span>
+              <img id="os-eevee" src="./assets/sprites/eevee.png" alt="Eevee" width="60" height="60" />
+              <span>Fim de semana</span>
+              <span class="opt-sub">Sábado ou domingo</span>
+            </button>
+            <button type="button" class="opt" data-group="data" onclick="pick('data','Semana que vem','s4', this)">
+              <span class="opt-dex">#700 SYLVEON</span>
+              <img id="os-sylveon" src="./assets/sprites/sylveon.png" alt="Sylveon" width="60" height="60" />
+              <span>Semana que vem</span>
+              <span class="opt-sub">Planejado com calma</span>
+            </button>
+            <button type="button" class="opt" data-group="data" onclick="pick('data','Quando Magikarp evoluir','s4', this)">
+              <span class="opt-dex">#130 GYARADOS</span>
+              <img id="os-gyarados" src="./assets/sprites/gyarados.png" alt="Gyarados" width="60" height="60" />
+              <span>Quando Magikarp evoluir</span>
+              <span class="opt-sub">Nível 20 (ou bem antes!)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 4: CONFIRMED TRAINER PASS -->
+      <div id="s4" class="screen hidden">
+        <div class="step-header">
+          <button type="button" class="back-btn" onclick="goTo('s3')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Voltar
+          </button>
+          <div class="progress-row" role="progressbar" aria-valuenow="4" aria-valuemin="1" aria-valuemax="4" aria-label="Encontro confirmado">
+            <div class="dot done"></div>
+            <div class="dot done"></div>
+            <div class="dot done"></div>
+            <div class="dot current"></div>
+          </div>
+          <span class="step-counter">OK!</span>
+        </div>
+
+        <div class="sprite-stage-outer">
+          <div class="sprite-wrap" id="sw4" role="button" tabindex="0" aria-label="Togekiss — clique para comemorar" onclick="pokeCry('togekiss')">
+            <img src="./assets/sprites/togekiss.png" alt="Togekiss" width="96" height="96" />
+          </div>
+          <span class="dex-pill">#468 TOGEKISS</span>
+        </div>
+
+        <span class="badge">Date confirmado!</span>
+        <h2 class="title">Perfeito, treinador(a)!</h2>
+
+        <div class="trainer-pass" aria-label="Resumo do Passaporte do Encontro">
+          <div class="pass-header">
+            <span class="pass-id">PASSAPORTE #0214</span>
+            <span class="pass-lvl">NV. 100</span>
+          </div>
+
+          <div class="sum-row">
+            <span class="sum-key">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              Local
+            </span>
+            <span class="sum-val-wrap">
+              <span class="sum-val" id="r-local">Cidade Cerúlea</span>
+              <button type="button" class="sum-change-btn" onclick="goTo('s1')" aria-label="Trocar local">Trocar</button>
+            </span>
+          </div>
+
+          <div class="sum-row">
+            <span class="sum-key">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                <line x1="6" y1="1" x2="6" y2="4"></line>
+                <line x1="10" y1="1" x2="10" y2="4"></line>
+                <line x1="14" y1="1" x2="14" y2="4"></line>
+              </svg>
+              Comida
+            </span>
+            <span class="sum-val-wrap">
+              <span class="sum-val" id="r-comida">Sushi de Magikarp</span>
+              <button type="button" class="sum-change-btn" onclick="goTo('s2')" aria-label="Trocar comida">Trocar</button>
+            </span>
+          </div>
+
+          <div class="sum-row">
+            <span class="sum-key">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              Quando
+            </span>
+            <span class="sum-val-wrap">
+              <span class="sum-val" id="r-data">Fim de semana</span>
+              <button type="button" class="sum-change-btn" onclick="goTo('s3')" aria-label="Trocar data">Trocar</button>
+            </span>
+          </div>
+
+          <div class="sum-row" id="rowNota">
+            <span class="sum-key">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+              Recado
+            </span>
+            <span class="sum-val" id="r-nota">Combinado!</span>
+          </div>
+        </div>
+
+        <div class="note-box">
+          <label class="note-label" for="customNote">Quer deixar um horário ou recado no bilhete?</label>
+          <input
+            type="text"
+            id="customNote"
+            class="note-input"
+            maxlength="70"
+            placeholder="Ex.: Sábado às 19h30, passo pra te buscar!"
+            oninput="updateNote(this.value)"
+          />
+        </div>
+
+        <div class="heart-row" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </div>
+
+        <p class="final-note">Você foi capturado(a) com uma Love Ball.<br>Sem escapatória: encontro nível 100 confirmado.</p>
+
+        <div class="action-grid">
+          <button type="button" class="btn-action primary-span" onclick="shareWhatsApp()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 2L11 13"></path>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            Enviar confirmação no WhatsApp
+          </button>
+          <button type="button" class="btn-action" onclick="copyInvite()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Copiar bilhete
+          </button>
+          <button type="button" class="btn-action" onclick="downloadCalendar()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Salvar na agenda
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="page-footer">
+      <p>Feito com carinho • Sprites oficiais via PokéAPI</p>
+    </footer>
+  </main>
+
+  <!-- Accessible Pokédex Modal Dialog -->
+  <div id="dexModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="dexModalTitle" onclick="handleBackdropClick(event)">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="dexModalTitle" class="modal-title">Pokédex do Encontro (15)</h2>
+        <button type="button" class="icon-btn" onclick="toggleDexModal(false)" aria-label="Fechar Pokédex">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
         </button>
       </div>
+      <p class="note-label">Equipe escalada para garantir que esse encontro seja inesquecível:</p>
+      <div class="dex-list" id="dexGrid"></div>
     </div>
   </div>
 
-  <div id="s2" class="screen hidden">
-    <div class="progress-row">
-      <div class="dot done"></div><div class="dot done"></div><div class="dot"></div><div class="dot"></div>
-    </div>
-    <div class="sprite-wrap" style="background:#FAEEDA;border-color:#FAC775;" id="sw2">
-      <div class="spinner" style="border-color:#FAC775;border-top-color:#BA7517;"></div>
-    </div>
-    <span class="badge" style="background:#FAEEDA;color:#633806;border-color:#FAC775;">Passo 2 de 3</span>
-    <p class="title">O que vamos comer?</p>
-    <p class="subtitle">Escolhe o cardápio do nosso date:</p>
-    <div class="card">
-      <div class="option-grid">
-        <button class="opt" onclick="pick('comida','Sushi de Magikarp','s3')">
-          <div class="opt-mini-spinner" id="os-magikarp"></div>
-          <span>Sushi de Magikarp</span>
-        </button>
-        <button class="opt" onclick="pick('comida','Pizza de Slowpoke','s3')">
-          <div class="opt-mini-spinner" id="os-slowpoke"></div>
-          <span>Pizza de Slowpoke</span>
-        </button>
-        <button class="opt" onclick="pick('comida','Café da Jigglypuff','s3')">
-          <div class="opt-mini-spinner" id="os-jigglypuff"></div>
-          <span>Café da Jigglypuff</span>
-        </button>
-        <button class="opt" onclick="pick('comida','Sorvete Snover','s3')">
-          <div class="opt-mini-spinner" id="os-snover"></div>
-          <span>Sorvete Snover</span>
-        </button>
-      </div>
-    </div>
+  <!-- Accessible Toast Notification -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    <span id="toastMsg">Bilhete copiado!</span>
   </div>
 
-  <div id="s3" class="screen hidden">
-    <div class="progress-row">
-      <div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot"></div>
-    </div>
-    <div class="sprite-wrap" style="background:#E6F1FB;border-color:#B5D4F4;" id="sw3">
-      <div class="spinner" style="border-color:#B5D4F4;border-top-color:#185FA5;"></div>
-    </div>
-    <span class="badge" style="background:#E6F1FB;color:#0C447C;border-color:#B5D4F4;">Passo 3 de 3</span>
-    <p class="title">Quando a aventura começa?</p>
-    <p class="subtitle">Escolhe a data perfeita pra gente:</p>
-    <div class="card">
-      <div class="option-grid">
-        <button class="opt" onclick="pick('data','Hoje mesmo!','s4')">
-          <div class="opt-mini-spinner" id="os-raichu"></div>
-          <span>Hoje mesmo!</span>
-        </button>
-        <button class="opt" onclick="pick('data','Fim de semana','s4')">
-          <div class="opt-mini-spinner" id="os-eevee"></div>
-          <span>Fim de semana</span>
-        </button>
-        <button class="opt" onclick="pick('data','Semana que vem','s4')">
-          <div class="opt-mini-spinner" id="os-sylveon"></div>
-          <span>Semana que vem</span>
-        </button>
-        <button class="opt" onclick="pick('data','Quando Magikarp evoluir','s4')">
-          <div class="opt-mini-spinner" id="os-gyarados"></div>
-          <span>Quando Magikarp evoluir</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div id="s4" class="screen hidden">
-    <div class="sprite-wrap" style="background:#FBEAF0;border-color:#F4C0D1;animation:burst 1.8s ease-in-out infinite;" id="sw4">
-      <div class="spinner"></div>
-    </div>
-    <span class="badge">Date confirmado!</span>
-    <p class="title">Perfeito, treinador(a)!</p>
-    <div class="summary-card">
-      <div class="sum-row"><span class="sum-key">📍 Local</span><span class="sum-val" id="r-local"></span></div>
-      <div class="sum-row"><span class="sum-key">🍽️ Comida</span><span class="sum-val" id="r-comida"></span></div>
-      <div class="sum-row"><span class="sum-key">📅 Quando</span><span class="sum-val" id="r-data"></span></div>
-    </div>
-    <div class="heart-row">♥ ♥ ♥</div>
-    <p class="final-note">Você foi capturado(a) com uma Pokébola de Amor.<br>Não tem cura. Nível 100 confirmado.</p>
-  </div>
-
-</div>
-
-<script>
-  const BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
-  const POKES = {
-    pikachu: 25, clefairy: 35, vaporeon: 134, flareon: 136,
-    jolteon: 135, leafeon: 470, magikarp: 129, slowpoke: 79,
-    jigglypuff: 39, snover: 459, raichu: 26, eevee: 133,
-    sylveon: 700, gyarados: 130, togekiss: 468,
-  };
-
-  function spriteUrl(name) { return BASE + POKES[name] + '.png'; }
-
-  function loadSprite(wrapId, name) {
-    const wrap = document.getElementById(wrapId);
-    if (!wrap) return;
-    const img = new Image();
-    img.onload = () => {
-      wrap.innerHTML = '';
-      img.style.cssText = 'width:104px;height:104px;image-rendering:pixelated;object-fit:contain;';
-      wrap.appendChild(img);
+  <script>
+    const BASE = './assets/sprites/';
+    const REMOTE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
+    const POKES = {
+      pikachu: 25, clefairy: 35, vaporeon: 134, flareon: 136,
+      jolteon: 135, leafeon: 470, magikarp: 129, slowpoke: 79,
+      jigglypuff: 39, snover: 459, raichu: 26, eevee: 133,
+      sylveon: 700, gyarados: 130, togekiss: 468
     };
-    img.src = spriteUrl(name);
-  }
 
-  function loadOptSprite(spinnerId, name) {
-    const el = document.getElementById(spinnerId);
-    if (!el) return;
-    const img = new Image();
-    img.onload = () => {
-      img.style.cssText = 'width:60px;height:60px;image-rendering:pixelated;object-fit:contain;';
-      el.replaceWith(img);
+    const POKE_LABELS = {
+      pikachu: 'Pikachu', clefairy: 'Clefairy', vaporeon: 'Vaporeon', flareon: 'Flareon',
+      jolteon: 'Jolteon', leafeon: 'Leafeon', magikarp: 'Magikarp', slowpoke: 'Slowpoke',
+      jigglypuff: 'Jigglypuff', snover: 'Snover', raichu: 'Raichu', eevee: 'Eevee',
+      sylveon: 'Sylveon', gyarados: 'Gyarados', togekiss: 'Togekiss'
     };
-    img.src = spriteUrl(name);
-  }
 
-  const choices = {};
-  let noCount = 0;
-  const msgs = [
-    'Esse botão tá com defeito... 🤔',
-    'Eita, escapou de novo!',
-    'Pikachu bloqueou o caminho!',
-    'Hm, que curioso...',
-    'Botão Não? Não existe nessa Pokédex.',
-    'É destino, aceita logo!',
-    'Ok, claramente não tem outra opção 😏'
-  ];
-
-  function runaway() {
-    const btn = document.getElementById('btnNo');
-    const msg = document.getElementById('noMsg');
-    noCount++;
-    msg.textContent = msgs[Math.min(noCount - 1, msgs.length - 1)];
-    btn.style.animation = 'none';
-    btn.offsetHeight;
-    const rx = (Math.random() > 0.5 ? 1 : -1) * (40 + Math.floor(Math.random() * 100));
-    const ry = (Math.random() > 0.5 ? 1 : -1) * Math.floor(Math.random() * 35);
-    btn.style.setProperty('--ty', ry + 'px');
-    btn.style.transform = `translate(${rx}px, ${ry}px)`;
-    btn.style.animation = 'shake 0.35s';
-    setTimeout(() => { btn.style.animation = ''; }, 400);
-    if (noCount >= 3) btn.style.opacity = String(Math.max(0.06, 1 - (noCount - 2) * 0.2));
-    if (noCount >= 7) { btn.style.opacity = '0'; btn.style.pointerEvents = 'none'; }
-  }
-
-  function goTo(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    document.getElementById(id).classList.remove('hidden');
-  }
-
-  function pick(key, val, next) {
-    choices[key] = val;
-    if (next === 's4') {
-      document.getElementById('r-local').textContent = choices['local'] || '';
-      document.getElementById('r-comida').textContent = choices['comida'] || '';
-      document.getElementById('r-data').textContent = choices['data'] || '';
+    function spriteUrl(name) {
+      return BASE + name + '.png';
     }
-    goTo(next);
-  }
 
-  window.addEventListener('load', () => {
-    loadSprite('sw0', 'pikachu');
-    loadSprite('sw1', 'clefairy');
-    loadSprite('sw2', 'jigglypuff');
-    loadSprite('sw3', 'eevee');
-    loadSprite('sw4', 'togekiss');
-    loadOptSprite('os-vaporeon',   'vaporeon');
-    loadOptSprite('os-flareon',    'flareon');
-    loadOptSprite('os-jolteon',    'jolteon');
-    loadOptSprite('os-leafeon',    'leafeon');
-    loadOptSprite('os-magikarp',   'magikarp');
-    loadOptSprite('os-slowpoke',   'slowpoke');
-    loadOptSprite('os-jigglypuff', 'jigglypuff');
-    loadOptSprite('os-snover',     'snover');
-    loadOptSprite('os-raichu',     'raichu');
-    loadOptSprite('os-eevee',      'eevee');
-    loadOptSprite('os-sylveon',    'sylveon');
-    loadOptSprite('os-gyarados',   'gyarados');
-  });
-</script>
+    /* 8-bit Web Audio Synthesizer */
+    let soundEnabled = true;
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx && (window.AudioContext || window.webkitAudioContext)) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playTone(freqs, durationMs = 80, type = 'square') {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        freqs.forEach((f, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(f, now + idx * (durationMs / 1000));
+          gain.gain.setValueAtTime(0.06, now + idx * (durationMs / 1000));
+          gain.gain.exponentialRampToValueAtTime(0.001, now + (idx + 1) * (durationMs / 1000));
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + idx * (durationMs / 1000));
+          osc.stop(now + (idx + 1) * (durationMs / 1000));
+        });
+      } catch (_) {}
+    }
+
+    function pokeCry(name) {
+      playTone([523.25, 659.25, 783.99, 1046.5], 65, 'triangle');
+      showToast((POKE_LABELS[name] || 'Pokémon') + ' está torcendo pelo nosso date!');
+    }
+
+    /* State & Choices */
+    const choices = {
+      local: 'Cidade Cerúlea',
+      comida: 'Sushi de Magikarp',
+      data: 'Fim de semana',
+      nota: ''
+    };
+
+    let noCount = 0;
+    const msgs = [
+      'Esse botão está com defeito...',
+      'Eita, escapou pela grama alta!',
+      'Pikachu bloqueou a saída!',
+      'Pokédex informa: opção inválida.',
+      'Botão Não fugiu da batalha!',
+      'É destino, aceita logo vai!',
+      'Ok, só restou o Sim!'
+    ];
+
+    function runaway() {
+      const btn = document.getElementById('btnNo');
+      const msg = document.getElementById('noMsg');
+      const arena = document.getElementById('evadeArena');
+      if (!btn || !msg) return;
+
+      noCount++;
+      playTone([300, 220], 55, 'sawtooth');
+      msg.textContent = msgs[Math.min(noCount - 1, msgs.length - 1)];
+
+      const maxX = arena ? Math.max(24, Math.min(72, (arena.clientWidth - btn.offsetWidth) / 2.4)) : 48;
+      const rx = (noCount % 2 === 0 ? 1 : -1) * Math.floor(20 + Math.random() * maxX);
+      const ry = (Math.random() > 0.5 ? 1 : -1) * Math.floor(4 + Math.random() * 14);
+
+      btn.style.setProperty('--tx', rx + 'px');
+      btn.style.setProperty('--ty', ry + 'px');
+      btn.style.transform = `translate(${rx}px, ${ry}px)`;
+      btn.style.animation = 'shake 0.3s';
+      setTimeout(() => { btn.style.animation = ''; }, 320);
+
+      if (noCount >= 3) {
+        btn.style.opacity = String(Math.max(0.12, 1 - (noCount - 2) * 0.22));
+      }
+      if (noCount >= 7) {
+        btn.style.opacity = '0';
+        btn.style.pointerEvents = 'none';
+        btn.setAttribute('aria-hidden', 'true');
+        btn.tabIndex = -1;
+      }
+    }
+
+    function goTo(id) {
+      playTone([440, 587.33], 60, 'triangle');
+      document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+      const target = document.getElementById(id);
+      if (target) target.classList.remove('hidden');
+      if (id === 's4') {
+        playTone([523.25, 659.25, 783.99, 1046.5], 85, 'triangle');
+      }
+    }
+
+    function pick(key, val, next, btnEl) {
+      choices[key] = val;
+      if (btnEl && btnEl.parentElement) {
+        btnEl.parentElement.querySelectorAll('.opt').forEach(b => b.setAttribute('aria-pressed', 'false'));
+        btnEl.setAttribute('aria-pressed', 'true');
+      }
+      if (next === 's4') {
+        document.getElementById('r-local').textContent = choices['local'] || '';
+        document.getElementById('r-comida').textContent = choices['comida'] || '';
+        document.getElementById('r-data').textContent = choices['data'] || '';
+        document.getElementById('r-nota').textContent = choices['nota'] ? choices['nota'] : 'Combinado!';
+      }
+      goTo(next);
+    }
+
+    function updateNote(val) {
+      choices.nota = val.trim();
+      const el = document.getElementById('r-nota');
+      if (el) el.textContent = choices.nota || 'Combinado!';
+    }
+
+    function buildSummaryText() {
+      const lines = [
+        'Passaporte PokéDate Confirmado (Nv. 100)!',
+        `Local: ${choices.local}`,
+        `Cardápio: ${choices.comida}`,
+        `Quando: ${choices.data}`
+      ];
+      if (choices.nota) lines.push(`Recado: ${choices.nota}`);
+      return lines.join('\n');
+    }
+
+    function copyInvite() {
+      const text = buildSummaryText();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('Bilhete copiado para a área de transferência!');
+        }).catch(() => {
+          showToast('Bilhete pronto para compartilhar!');
+        });
+      } else {
+        showToast('Bilhete pronto para compartilhar!');
+      }
+      playTone([659.25, 880], 70, 'triangle');
+    }
+
+    function shareWhatsApp() {
+      const text = encodeURIComponent(buildSummaryText());
+      window.open(`https://wa.me/?text=${text}`, '_blank', 'noopener,noreferrer');
+    }
+
+    function downloadCalendar() {
+      const now = new Date();
+      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2, 19, 30, 0);
+      const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2, 22, 0, 0);
+      const fmt = d => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+      const desc = `Encontro Pokémon — Local: ${choices.local} | Comida: ${choices.comida} | Quando: ${choices.data}${choices.nota ? ' | Nota: ' + choices.nota : ''}`;
+      const ics = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//PokeDate//PT-BR',
+        'BEGIN:VEVENT',
+        `DTSTART:${fmt(start)}`,
+        `DTEND:${fmt(end)}`,
+        `SUMMARY:PokéDate: ${choices.local} (${choices.comida})`,
+        `DESCRIPTION:${desc}`,
+        `LOCATION:${choices.local}`,
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+
+      const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'pokedate-encontro.ics';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showToast('Evento salvo para sua agenda!');
+    }
+
+    let toastTimer = null;
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const msgEl = document.getElementById('toastMsg');
+      if (!toast || !msgEl) return;
+      msgEl.textContent = message;
+      toast.classList.remove('hidden');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 2600);
+    }
+
+    /* Theme Toggle (Light / Dark) */
+    function setDarkTheme(isDark) {
+      document.documentElement.classList.toggle('dark', isDark);
+      const btn = document.getElementById('btnTheme');
+      const moon = document.getElementById('iconMoon');
+      const sun = document.getElementById('iconSun');
+      if (btn) btn.setAttribute('aria-pressed', String(isDark));
+      if (moon) moon.classList.toggle('hidden', isDark);
+      if (sun) sun.classList.toggle('hidden', !isDark);
+      try { localStorage.setItem('pokedate-theme', isDark ? 'dark' : 'light'); } catch (_) {}
+    }
+
+    /* Pokédex Modal */
+    function toggleDexModal(open) {
+      const modal = document.getElementById('dexModal');
+      const btn = document.getElementById('btnDex');
+      if (!modal || !btn) return;
+      const shouldOpen = typeof open === 'boolean' ? open : modal.classList.contains('hidden');
+      modal.classList.toggle('hidden', !shouldOpen);
+      btn.setAttribute('aria-expanded', String(shouldOpen));
+      playTone(shouldOpen ? [523.25, 659.25] : [659.25, 523.25], 55, 'triangle');
+    }
+
+    function handleBackdropClick(e) {
+      if (e.target && e.target.id === 'dexModal') {
+        toggleDexModal(false);
+      }
+    }
+
+    function populateDexGrid() {
+      const grid = document.getElementById('dexGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      Object.entries(POKES).forEach(([key, num]) => {
+        const card = document.createElement('div');
+        card.className = 'dex-item';
+        const numStr = '#' + String(num).padStart(3, '0');
+        card.innerHTML = `
+          <span class="dex-item-num">${numStr}</span>
+          <img src="${spriteUrl(key)}" alt="${POKE_LABELS[key]}" loading="lazy" />
+          <span class="dex-item-name">${POKE_LABELS[key]}</span>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        const saved = localStorage.getItem('pokedate-theme');
+        if (saved === 'dark') setDarkTheme(true);
+      } catch (_) {}
+
+      document.getElementById('btnTheme')?.addEventListener('click', () => {
+        const isDark = !document.documentElement.classList.contains('dark');
+        setDarkTheme(isDark);
+        playTone([587.33, 783.99], 50, 'sine');
+      });
+
+      document.getElementById('btnSound')?.addEventListener('click', (e) => {
+        soundEnabled = !soundEnabled;
+        const btn = e.currentTarget;
+        btn.setAttribute('aria-pressed', String(soundEnabled));
+        document.getElementById('iconSoundOn')?.classList.toggle('hidden', !soundEnabled);
+        document.getElementById('iconSoundOff')?.classList.toggle('hidden', soundEnabled);
+        if (soundEnabled) playTone([523.25, 783.99], 60, 'triangle');
+      });
+
+      document.getElementById('btnDex')?.addEventListener('click', () => toggleDexModal());
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') toggleDexModal(false);
+      });
+
+      populateDexGrid();
+    });
+  </script>
 </body>
 </html>

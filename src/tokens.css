@@ -1,0 +1,196 @@
+/* Design Tokens - Auto-generated */
+/* Do not edit directly - modify tokens.json instead */
+
+/* === PRIMITIVES === */
+:root {
+  --primitive-color-white: #ffffff;
+  --primitive-color-rose-50: #fff5f8;
+  --primitive-color-rose-100: #fde8ef;
+  --primitive-color-rose-200: #f9cedd;
+  --primitive-color-rose-300: #f4a3c1;
+  --primitive-color-rose-400: #ec6b9b;
+  --primitive-color-rose-500: #d44070;
+  --primitive-color-rose-600: #b82d5b;
+  --primitive-color-rose-700: #962148;
+  --primitive-color-rose-800: #781d3c;
+  --primitive-color-rose-900: #4c1428;
+  --primitive-color-plum-50: #faf3f6;
+  --primitive-color-plum-100: #f3e5eb;
+  --primitive-color-plum-200: #e6ced9;
+  --primitive-color-plum-300: #cfb0bf;
+  --primitive-color-plum-400: #a67c90;
+  --primitive-color-plum-500: #734b5e;
+  --primitive-color-plum-600: #593647;
+  --primitive-color-plum-700: #3d2230;
+  --primitive-color-plum-800: #28151f;
+  --primitive-color-plum-900: #1b0d14;
+  --primitive-color-plum-950: #12080d;
+  --primitive-color-mint-50: #e6f8f2;
+  --primitive-color-mint-200: #99e3cb;
+  --primitive-color-mint-500: #15966d;
+  --primitive-color-mint-700: #0a523b;
+  --primitive-color-mint-900: #0d2921;
+  --primitive-color-amber-50: #fef4e2;
+  --primitive-color-amber-200: #f9cc78;
+  --primitive-color-amber-500: #c27810;
+  --primitive-color-amber-700: #6b3e05;
+  --primitive-color-amber-900: #2d1e0b;
+  --primitive-color-sky-50: #e8f3fe;
+  --primitive-color-sky-200: #a7d2f9;
+  --primitive-color-sky-500: #1967b2;
+  --primitive-color-sky-700: #0c3d70;
+  --primitive-color-sky-900: #0f2238;
+  --primitive-color-red-500: #dc2626;
+  --primitive-color-red-600: #b91c1c;
+  --primitive-font-display: 'Fredoka', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --primitive-font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --primitive-font-pixel: 'Press Start 2P', monospace;
+  --primitive-font-mono: 'JetBrains Mono', monospace;
+  --primitive-spacing-1: 0.25rem;
+  --primitive-spacing-2: 0.5rem;
+  --primitive-spacing-3: 0.75rem;
+  --primitive-spacing-4: 1rem;
+  --primitive-spacing-5: 1.25rem;
+  --primitive-spacing-6: 1.5rem;
+  --primitive-spacing-7: 1.75rem;
+  --primitive-spacing-8: 2rem;
+  --primitive-spacing-10: 2.5rem;
+  --primitive-spacing-12: 3rem;
+  --primitive-spacing-15: 0.375rem;
+  --primitive-spacing-25: 0.625rem;
+  --primitive-spacing-35: 0.875rem;
+  --primitive-spacing-05: 0.125rem;
+  --primitive-size-wrap-max: 30rem;
+  --primitive-size-sprite-wrap: 8rem;
+  --primitive-size-sprite-img: 6rem;
+  --primitive-size-opt-sprite: 3.75rem;
+  --primitive-size-spinner-lg: 2.25rem;
+  --primitive-size-spinner-sm: 1.5rem;
+  --primitive-size-dot: 0.5rem;
+  --primitive-size-dot-active: 1.5rem;
+  --primitive-size-icon-btn: 2.5rem;
+  --primitive-size-touch-min: 2.75rem;
+  --primitive-size-dialog-max: 25rem;
+  --primitive-fontSize-2xs: 0.6875rem;
+  --primitive-fontSize-xs: 0.75rem;
+  --primitive-fontSize-sm: 0.875rem;
+  --primitive-fontSize-base: 1rem;
+  --primitive-fontSize-lg: 1.125rem;
+  --primitive-fontSize-xl: 1.25rem;
+  --primitive-fontSize-2xl: 1.625rem;
+  --primitive-fontSize-3xl: 2rem;
+  --primitive-radius-sm: 0.5rem;
+  --primitive-radius-md: 0.875rem;
+  --primitive-radius-lg: 1.25rem;
+  --primitive-radius-xl: 1.75rem;
+  --primitive-radius-full: 9999px;
+  --primitive-shadow-card: 0 16px 40px -10px rgba(150, 33, 72, 0.14), 0 4px 12px -2px rgba(40, 21, 31, 0.06);
+  --primitive-shadow-card-dark: 0 18px 44px -10px rgba(0, 0, 0, 0.65), 0 4px 14px -2px rgba(236, 107, 155, 0.08);
+  --primitive-shadow-button: 0 6px 18px -3px rgba(212, 64, 112, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  --primitive-shadow-tile: 0 6px 16px -4px rgba(212, 64, 112, 0.16);
+  --primitive-duration-fast: 150ms;
+  --primitive-duration-normal: 240ms;
+  --primitive-duration-slow: 380ms;
+}
+
+/* === SEMANTIC === */
+:root {
+  --color-background: #fff5f8;
+  --color-foreground: #28151f;
+  --color-card: #ffffff;
+  --color-card-foreground: #28151f;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #28151f;
+  --color-primary: #d44070;
+  --color-primary-hover: #b82d5b;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f3e5eb;
+  --color-secondary-foreground: #3d2230;
+  --color-muted: #faf3f6;
+  --color-muted-foreground: #734b5e;
+  --color-accent: #fde8ef;
+  --color-accent-foreground: #781d3c;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #e6ced9;
+  --color-input: #e6ced9;
+  --color-ring: #d44070;
+  --color-step-1-bg: #e6f8f2;
+  --color-step-1-border: #99e3cb;
+  --color-step-1-fg: #0a523b;
+  --color-step-1-accent: #15966d;
+  --color-step-2-bg: #fef4e2;
+  --color-step-2-border: #f9cc78;
+  --color-step-2-fg: #6b3e05;
+  --color-step-2-accent: #c27810;
+  --color-step-3-bg: #e8f3fe;
+  --color-step-3-border: #a7d2f9;
+  --color-step-3-fg: #0c3d70;
+  --color-step-3-accent: #1967b2;
+  --font-display: 'Fredoka', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius-card: 1.75rem;
+  --radius-tile: 1.25rem;
+  --radius-button: 9999px;
+  --radius-badge: 9999px;
+}
+
+/* === COMPONENTS === */
+:root {
+  --button-bg: #d44070;
+  --button-fg: #ffffff;
+  --button-hover-bg: #b82d5b;
+  --button-radius: 9999px;
+  --button-shadow: 0 6px 18px -3px rgba(212, 64, 112, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  --card-bg: #ffffff;
+  --card-fg: #28151f;
+  --card-border: #e6ced9;
+  --card-radius: 1.75rem;
+  --card-padding: 1.5rem;
+  --card-shadow: 0 16px 40px -10px rgba(150, 33, 72, 0.14), 0 4px 12px -2px rgba(40, 21, 31, 0.06);
+  --sprite-stage-bg: #fde8ef;
+  --sprite-stage-border: #f9cedd;
+  --sprite-stage-size: 8rem;
+  --option-tile-bg: #faf3f6;
+  --option-tile-hover-bg: #fde8ef;
+  --option-tile-border: #e6ced9;
+  --option-tile-hover-border: #d44070;
+  --option-tile-radius: 1.25rem;
+  --option-tile-shadow: 0 6px 16px -4px rgba(212, 64, 112, 0.16);
+}
+
+/* === DARK MODE === */
+.dark {
+  --color-background: #12080d;
+  --color-foreground: #fff5f8;
+  --color-card: #1b0d14;
+  --color-card-foreground: #fff5f8;
+  --color-popover: #1b0d14;
+  --color-popover-foreground: #fff5f8;
+  --color-primary: #ec6b9b;
+  --color-primary-hover: #d44070;
+  --color-primary-foreground: #12080d;
+  --color-secondary: #28151f;
+  --color-secondary-foreground: #fde8ef;
+  --color-muted: #28151f;
+  --color-muted-foreground: #cfb0bf;
+  --color-accent: #3d2230;
+  --color-accent-foreground: #f9cedd;
+  --color-border: #3d2230;
+  --color-input: #3d2230;
+  --color-ring: #ec6b9b;
+  --color-step-1-bg: #0d2921;
+  --color-step-1-border: #15966d;
+  --color-step-1-fg: #99e3cb;
+  --color-step-1-accent: #99e3cb;
+  --color-step-2-bg: #2d1e0b;
+  --color-step-2-border: #c27810;
+  --color-step-2-fg: #f9cc78;
+  --color-step-2-accent: #f9cc78;
+  --color-step-3-bg: #0f2238;
+  --color-step-3-border: #1967b2;
+  --color-step-3-fg: #a7d2f9;
+  --color-step-3-accent: #a7d2f9;
+}

@@ -1,0 +1,77 @@
+/* Tailwind CSS v4 Design Tokens - Auto-generated */
+@theme {
+  --color-background: #fff5f8;
+  --color-foreground: #28151f;
+  --color-card: #ffffff;
+  --color-card-foreground: #28151f;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #28151f;
+  --color-primary: #d44070;
+  --color-primary-hover: #b82d5b;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f3e5eb;
+  --color-secondary-foreground: #3d2230;
+  --color-muted: #faf3f6;
+  --color-muted-foreground: #734b5e;
+  --color-accent: #fde8ef;
+  --color-accent-foreground: #781d3c;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #e6ced9;
+  --color-input: #e6ced9;
+  --color-ring: #d44070;
+  --color-step-1-bg: #e6f8f2;
+  --color-step-1-border: #99e3cb;
+  --color-step-1-fg: #0a523b;
+  --color-step-1-accent: #15966d;
+  --color-step-2-bg: #fef4e2;
+  --color-step-2-border: #f9cc78;
+  --color-step-2-fg: #6b3e05;
+  --color-step-2-accent: #c27810;
+  --color-step-3-bg: #e8f3fe;
+  --color-step-3-border: #a7d2f9;
+  --color-step-3-fg: #0c3d70;
+  --color-step-3-accent: #1967b2;
+  --font-display: 'Fredoka', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius-card: 1.75rem;
+  --radius-tile: 1.25rem;
+  --radius-button: 9999px;
+  --radius-badge: 9999px;
+}
+
+/* === DARK MODE OVERRIDES === */
+.dark {
+  --color-background: #12080d;
+  --color-foreground: #fff5f8;
+  --color-card: #1b0d14;
+  --color-card-foreground: #fff5f8;
+  --color-popover: #1b0d14;
+  --color-popover-foreground: #fff5f8;
+  --color-primary: #ec6b9b;
+  --color-primary-hover: #d44070;
+  --color-primary-foreground: #12080d;
+  --color-secondary: #28151f;
+  --color-secondary-foreground: #fde8ef;
+  --color-muted: #28151f;
+  --color-muted-foreground: #cfb0bf;
+  --color-accent: #3d2230;
+  --color-accent-foreground: #f9cedd;
+  --color-border: #3d2230;
+  --color-input: #3d2230;
+  --color-ring: #ec6b9b;
+  --color-step-1-bg: #0d2921;
+  --color-step-1-border: #15966d;
+  --color-step-1-fg: #99e3cb;
+  --color-step-1-accent: #99e3cb;
+  --color-step-2-bg: #2d1e0b;
+  --color-step-2-border: #c27810;
+  --color-step-2-fg: #f9cc78;
+  --color-step-2-accent: #f9cc78;
+  --color-step-3-bg: #0f2238;
+  --color-step-3-border: #1967b2;
+  --color-step-3-fg: #a7d2f9;
+  --color-step-3-accent: #a7d2f9;
+}

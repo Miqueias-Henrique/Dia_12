@@ -1,0 +1,34 @@
+{
+  "name": "dia_12",
+  "version": "2.0.0",
+  "description": "PokéDate — Convite interativo inspirado em Pokémon com Design Tokens (W3C DTCG), Tailwind CSS v4 e Dark Mode",
+  "main": "index.html",
+  "scripts": {
+    "tokens:css": "node ~/.gemini/skills/design-tokens/scripts/generate-tokens.cjs -c tokens.json -o src/tokens.css -f css",
+    "tokens:theme": "node ~/.gemini/skills/design-tokens/scripts/generate-tokens.cjs -c tokens.json -o src/theme.css -f tailwind-v4",
+    "tokens:validate": "node ~/.gemini/skills/design-tokens/scripts/validate-tokens.cjs --dir src/",
+    "css:build": "npx @tailwindcss/cli -i ./src/app.css -o ./dist/styles.css --minify",
+    "lint:copy": "node ~/.gemini/skills/taste-skill/scripts/copy-lint.mjs index.html --kind software",
+    "build": "npm run tokens:css && npm run tokens:theme && npm run tokens:validate && npm run css:build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Miqueias-Henrique/Dia_12.git"
+  },
+  "keywords": [
+    "pokemon",
+    "date-invite",
+    "design-tokens",
+    "tailwindcss-v4"
+  ],
+  "author": "Miqueias Henrique",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Miqueias-Henrique/Dia_12/issues"
+  },
+  "homepage": "https://github.com/Miqueias-Henrique/Dia_12#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.5",
+    "tailwindcss": "^4.3.5"
+  }
+}
