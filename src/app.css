@@ -2,6 +2,21 @@
 @import "./tokens.css";
 @import "./theme.css";
 
+.dark {
+  --button-bg: var(--color-primary);
+  --button-fg: var(--color-primary-foreground);
+  --button-hover-bg: var(--color-primary-hover);
+  --card-bg: var(--color-card);
+  --card-fg: var(--color-card-foreground);
+  --card-border: var(--color-border);
+  --sprite-stage-bg: var(--color-accent);
+  --sprite-stage-border: var(--color-border);
+  --option-tile-bg: var(--color-muted);
+  --option-tile-hover-bg: var(--color-accent);
+  --option-tile-border: var(--color-border);
+  --option-tile-hover-border: var(--color-primary);
+}
+
 *,
 *::before,
 *::after {
